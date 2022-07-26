@@ -55,14 +55,13 @@ class ItemServiceImpl implements ItemService {
     public List<Item> findItemByRequest(String text) {
         List<Item> result = new ArrayList<>();
         if (text != null && !text.isEmpty() && !text.isBlank()) {
-            log.info(itemRepository.getAllItems().toString());
-            result = itemRepository.getAllItems().stream().filter(
-                            item -> (item.getDescription().toLowerCase(Locale.ROOT)
-                                    .contains(text.toLowerCase(Locale.ROOT))
-                                    || item.getName().toLowerCase(Locale.ROOT)
-                                    .contains(text.toLowerCase(Locale.ROOT)))
-                                    && item.getAvailable())
-                    .collect(Collectors.toList());
+                result = itemRepository.getAllItems().stream().filter(
+                                item -> (item.getDescription().toLowerCase(Locale.ROOT)
+                                        .contains(text.toLowerCase(Locale.ROOT))
+                                        || item.getName().toLowerCase(Locale.ROOT)
+                                        .contains(text.toLowerCase(Locale.ROOT)))
+                                        && item.getAvailable())
+                        .collect(Collectors.toList());
         }
         return result;
     }

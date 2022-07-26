@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
-    private final ItemMapper itemMapper;
 
     @GetMapping
     public List<ItemDto> get(@RequestHeader("X-Sharer-User-Id") int userId) {
