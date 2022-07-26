@@ -2,42 +2,47 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private final ItemMapper itemMapper;
 
     @GetMapping
-    public List<Item> get(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemDto> get(@RequestHeader("X-Sharer-User-Id") int userId) {
         if (userId == 0){
-            return itemService.getAllItems();
+            return itemService.getAllItems().stream().map(ItemMapper::toDto).collect(Collectors.toList());
         } else {
-            return itemService.getItemsByUserId(userId);
+            return itemService.getItemsByUserId(userId).stream().map(ItemMapper::toDto).collect(Collectors.toList());
         }
     }
 
     @PostMapping
-    public Item add(@RequestHeader("X-Sharer-User-Id") int userId,
-                    @Valid @RequestBody Item item) {
-        return itemService.addNewItem(userId, item);
+    public ItemDto add(@RequestHeader("X-Sharer-User-Id") int userId,
+                    @Valid @RequestBody ItemDto itemDto) {
+
+        return ItemMapper.toDto(itemService.addNewItem(userId, ItemMapper.toItem(itemDto)));
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestHeader("X-Sharer-User-Id") int userId,
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") int userId,
                            @PathVariable int itemId,
-                           @Valid @RequestBody Item item){
-        return itemService.updateItem(userId, itemId, item);
+                           @Valid @RequestBody ItemDto itemDto){
+        return ItemMapper.toDto(itemService.updateItem(userId, itemId, ItemMapper.toItem(itemDto)));
     }
 
     @GetMapping("/{itemId}")
-    public Item getItemById(@PathVariable int itemId){
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@PathVariable int itemId){
+        return ItemMapper.toDto(itemService.getItemById(itemId));
     }
 
     @DeleteMapping("/{itemId}")
@@ -47,7 +52,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<Item> findItemByRequest(@RequestParam (name = "text") String text){
-        return itemService.findItemByRequest(text);
+    public List<ItemDto> findItemByRequest(@RequestParam (name = "text") String text){
+        return itemService.findItemByRequest(text).stream().map(ItemMapper::toDto).collect(Collectors.toList());
     }
 }
