@@ -23,8 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
         if (user != null && isValidateCreateUser(user)) {
-            userRepository.addUser(user);
-            return user;
+            return userRepository.addUser(user);
         }
         throw new EmptyListException("Сервера");
     }
