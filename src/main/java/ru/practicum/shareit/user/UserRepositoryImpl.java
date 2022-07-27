@@ -36,8 +36,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getUserById(int userId){
-        if (userList.size() > 0){
+    public User getUserById(int userId) {
+        if (userList.size() > 0) {
             return userList.get(userId);
         } else {
             throw new NotFoundException("Список пользователей пуст");

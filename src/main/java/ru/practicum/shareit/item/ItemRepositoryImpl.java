@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ItemRepositoryImpl implements ItemRepository{
+public class ItemRepositoryImpl implements ItemRepository {
 
     private static int id = 0;
     private final HashMap<Integer, Item> itemHashMap = new HashMap<>();
 
     @Override
     public Item addItem(Item item) {
-        if (item.getId() == 0){
+        if (item.getId() == 0) {
             id++;
             item.setId(id);
         }

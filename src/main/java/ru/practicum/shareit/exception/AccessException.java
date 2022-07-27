@@ -1,11 +1,10 @@
 package ru.practicum.shareit.exception;
 
-public class AccessException extends RuntimeException{
-    private final String message;
+import lombok.AllArgsConstructor;
 
-    public AccessException(String message) {
-        this.message = message;
-    }
+@AllArgsConstructor
+public class AccessException extends RuntimeException {
+    private final String message;
 
     @Override
     public String getMessage() {

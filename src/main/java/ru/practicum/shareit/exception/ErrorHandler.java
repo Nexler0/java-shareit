@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,20 +37,8 @@ public class ErrorHandler {
 
 }
 
+@Data
 class ErrorResponse {
     private final String error;
     private final String description;
-
-    public ErrorResponse(String error, String description) {
-        this.error = error;
-        this.description = description;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

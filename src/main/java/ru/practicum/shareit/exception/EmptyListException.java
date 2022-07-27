@@ -1,11 +1,10 @@
 package ru.practicum.shareit.exception;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class EmptyListException extends RuntimeException {
     private final String message;
-
-    public EmptyListException(String message) {
-        this.message = message;
-    }
 
     @Override
     public String getMessage() {

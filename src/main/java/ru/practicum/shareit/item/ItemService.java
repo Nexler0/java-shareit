@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemService {
+
     Item addNewItem(int userId, Item item);
 
     void deleteItem(int userId, int itemId);
