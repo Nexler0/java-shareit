@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ItemDto {
-    private int id;
-    private int userId;
+    private Long id;
+    private Long userId;
     private String name;
     private String description;
     private Boolean available;
