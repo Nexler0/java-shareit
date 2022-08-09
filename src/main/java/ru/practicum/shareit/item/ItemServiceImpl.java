@@ -22,13 +22,13 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     public Item addNewItem(int userId, Item item) {
-        if (userRepository.getUserById(userId) != null
+        if (userRepository.findById((long) userId).isEmpty()
                 && item.getAvailable() != null
                 && item.getName() != null && !item.getName().isEmpty()
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
-//            item.setUserId(userId);
-            return itemRepository.addItem(item);
-        } else if (userRepository.getUserById(userId) == null) {
+            item.setUserId((long) userId);
+            return itemRepository.save(item);
+        } else if (userRepository.findById((long) userId).isEmpty()) {
             throw new NotFoundException("пользователь не найден");
         } else if (item.getAvailable() == null
                 || item.getName() != null || !item.getDescription().isEmpty()
@@ -42,7 +42,7 @@ class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItem(int userId, int itemId) {
         if (itemRepository.getItemById(itemId).getUserId() == userId) {
-            itemRepository.deleteItem(itemId);
+            itemRepository.deleteById((long) itemId);
         } else {
             throw new AccessException("Доступ запрещен");
         }
@@ -52,7 +52,7 @@ class ItemServiceImpl implements ItemService {
     public List<Item> findItemByRequest(String text) {
         List<Item> result = new ArrayList<>();
         if (text != null && !text.isEmpty() && !text.isBlank()) {
-            result = itemRepository.getAllItems().stream().filter(
+            result = itemRepository.findAll().stream().filter(
                             item -> (item.getDescription().toLowerCase(Locale.ROOT)
                                     .contains(text.toLowerCase(Locale.ROOT))
                                     || item.getName().toLowerCase(Locale.ROOT)
@@ -65,13 +65,13 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getAllItems() {
-        return itemRepository.getAllItems();
+        return itemRepository.findAll();
     }
 
     @Override
     public List<Item> getItemsByUserId(int userId) {
         if (userId == 0) {
-            return itemRepository.getAllItems();
+            return itemRepository.findAll();
         } else {
             return itemRepository.findItemByUserId(userId);
         }
@@ -87,23 +87,22 @@ class ItemServiceImpl implements ItemService {
     public Item updateItem(int userId, int itemId, Item item) {
         Item oldItem = itemRepository.getItemById(itemId);
 
-        if (userRepository.getUserById(userId) != null &&
+        if (userRepository.findById((long)userId).isEmpty() &&
                 itemRepository.getItemById(itemId) != null && userId == oldItem.getUserId()) {
             if (item.getName() != null && !item.getName().isEmpty()) {
                 oldItem.setName(item.getName());
-                itemRepository.deleteItem(itemId);
+                itemRepository.deleteById((long) itemId);
             }
             if (item.getDescription() != null && !item.getDescription().isEmpty()) {
                 oldItem.setDescription(item.getDescription());
-                itemRepository.deleteItem(itemId);
+                itemRepository.deleteById((long) itemId);
             }
             if (item.getAvailable() != oldItem.getAvailable() && item.getAvailable() != null) {
                 oldItem.setAvailable(item.getAvailable());
-                itemRepository.deleteItem(itemId);
+                itemRepository.deleteById((long) itemId);
             }
-            return itemRepository.addItem(oldItem);
+            return itemRepository.save(oldItem);
         }
         throw new NotFoundException("Итернал");
     }
-
 }

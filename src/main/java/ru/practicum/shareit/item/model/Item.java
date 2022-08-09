@@ -32,7 +32,6 @@ public class Item implements Serializable {
     @Column(name = "items_available")
     private Boolean available;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

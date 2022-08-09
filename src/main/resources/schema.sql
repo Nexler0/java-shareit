@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS items CASCADE;
-
+DROP TYPE IF EXISTS status_enum CASCADE;
 
 CREATE TYPE status_enum AS ENUM ('waiting', 'approved', 'rejected', 'canceled');
 

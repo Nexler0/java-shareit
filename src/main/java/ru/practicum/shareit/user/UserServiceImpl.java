@@ -9,6 +9,7 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
         if (user != null && isValidateCreateUser(user)) {
-            return userRepository.addUser(user);
+            return userRepository.save(user);
         }
         throw new EmptyListException("Сервера");
     }
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private boolean isValidateCreateUser(User user) {
         if (user.getEmail() != null && !user.getName().isEmpty()
                 && user.getEmail() != null && !user.getEmail().isEmpty()
-                && !userRepository.getAllUsers().contains(user)) {
+                && !userRepository.findAll().contains(user)) {
             return true;
         }
         if (user.getEmail() == null) {
@@ -42,11 +43,11 @@ public class UserServiceImpl implements UserService {
 
     private boolean isValidateUpdateUser(User user) {
         if (user.getId() != 0) {
-            return !user.equals(userRepository.getUserById(user.getId()));
+            return !user.equals(userRepository.findById((long) user.getId()));
         } else if (user.getId() > 0) {
-            return userRepository.getAllUsers().stream().noneMatch(user1 -> user1.equals(user));
+            return userRepository.findAll().stream().noneMatch(user1 -> user1.equals(user));
         } else {
-            if (userRepository.getAllUsers().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
+            if (userRepository.findAll().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
                 throw new EmptyListException("Ошибка валидации email");
             } else {
                 return true;
@@ -56,12 +57,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(int id) {
-        userRepository.deleteUser(id);
+        userRepository.deleteById((long) id);
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = userRepository.getAllUsers();
+        List<User> users = userRepository.findAll();
 
         if (!users.isEmpty()) {
             log.info("Запрос пользователей, в списке {}", users.size());
@@ -73,9 +74,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(int userId) {
-        User user = userRepository.getUserById(userId);
-        if (user != null) {
-            return user;
+        Optional<User> user = userRepository.findById((long) userId);
+        if (user.isPresent()) {
+            return user.get();
         } else {
             throw new NotFoundException("Пользователь не найден");
         }
@@ -87,13 +88,13 @@ public class UserServiceImpl implements UserService {
 
         if (user.getEmail() != null && !user.getEmail().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setEmail(user.getEmail());
-            userRepository.deleteUser(userId);
+            userRepository.deleteById((long) userId);
         }
         if (user.getName() != null && !user.getName().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setName(user.getName());
-            userRepository.deleteUser(userId);
+            userRepository.deleteById((long) userId);
         }
-        userRepository.addUser(oldUser);
+        userRepository.save(oldUser);
         return oldUser;
     }
 }
