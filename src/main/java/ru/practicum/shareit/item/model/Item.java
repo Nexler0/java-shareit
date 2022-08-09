@@ -4,27 +4,32 @@ import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "items")
 @Validated
-@Getter @Setter @ToString
-public class Item {
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(table = "users", name = "id")
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "item_name")
+    @Column(name = "items_name")
     private String name;
 
-    @Column(name = "item_description")
+    @Column(name = "items_description")
     private String description;
 
-    @Column(name = "item_available")
+    @Column(name = "items_available")
     private Boolean available;
 
 

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.*;
@@ -13,15 +14,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-
-    ItemServiceImpl(ItemRepository repository, UserRepository userRepository) {
-        this.itemRepository = repository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Item addNewItem(int userId, Item item) {
@@ -29,7 +26,7 @@ class ItemServiceImpl implements ItemService {
                 && item.getAvailable() != null
                 && item.getName() != null && !item.getName().isEmpty()
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
-            item.setUserId(userId);
+//            item.setUserId(userId);
             return itemRepository.addItem(item);
         } else if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("пользователь не найден");

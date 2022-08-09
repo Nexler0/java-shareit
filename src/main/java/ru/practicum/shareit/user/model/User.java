@@ -5,22 +5,23 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users", schema = "public")
 @Validated
 @NoArgsConstructor
 @Getter @Setter @ToString
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_name")
+    @Column(name = "users_name")
     private String name;
 
-    @Column(name = "user_email")
+    @Column(name = "users_email")
     @Email
     private String email;
 
