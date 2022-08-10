@@ -14,9 +14,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter @Setter @ToString
 public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "users_name")
     private String name;

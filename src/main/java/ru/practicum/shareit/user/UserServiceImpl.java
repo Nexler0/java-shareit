@@ -42,8 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isValidateUpdateUser(User user) {
-        if (user.getId() != 0) {
-            return !user.equals(userRepository.findById((long) user.getId()));
+        if (user.getId() == null || user.getId() == 0) {
+//            return !user.equals(userRepository.getReferenceById(user.getId()));
+            return false;
         } else if (user.getId() > 0) {
             return userRepository.findAll().stream().noneMatch(user1 -> user1.equals(user));
         } else {
@@ -56,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(int id) {
-        userRepository.deleteById((long) id);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -73,26 +74,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(int userId) {
-        Optional<User> user = userRepository.findById((long) userId);
-        if (user.isPresent()) {
-            return user.get();
+    public User getUserById(Long userId) {
+        User user = userRepository.getReferenceById(userId);
+        if (user.getName() != null) {
+            return user;
         } else {
             throw new NotFoundException("Пользователь не найден");
         }
     }
 
     @Override
-    public User updateUser(int userId, User user) {
+    public User updateUser(Long userId, User user) {
         User oldUser = getUserById(userId);
 
         if (user.getEmail() != null && !user.getEmail().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setEmail(user.getEmail());
-            userRepository.deleteById((long) userId);
+            userRepository.deleteById(userId);
         }
         if (user.getName() != null && !user.getName().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setName(user.getName());
-            userRepository.deleteById((long) userId);
+            userRepository.deleteById(userId);
         }
         userRepository.save(oldUser);
         return oldUser;
