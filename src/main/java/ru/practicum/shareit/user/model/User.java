@@ -4,16 +4,17 @@ import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.io.Serializable;
+import javax.validation.constraints.Email;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "public")
 @Validated
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@Getter @Setter @ToString
-public class User implements Serializable {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

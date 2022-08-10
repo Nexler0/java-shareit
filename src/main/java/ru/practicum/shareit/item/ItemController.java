@@ -16,31 +16,31 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> get(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemDto> get(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getItemsByUserId(userId).stream().map(ItemMapper::toDto).collect(Collectors.toList());
     }
 
     @PostMapping
-    public ItemDto add(@RequestHeader("X-Sharer-User-Id") int userId,
+    public ItemDto add(@RequestHeader("X-Sharer-User-Id") Long userId,
                        @Valid @RequestBody ItemDto itemDto) {
         return ItemMapper.toDto(itemService.addNewItem(userId, ItemMapper.toItem(itemDto)));
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") int userId,
-                              @PathVariable int itemId,
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                              @PathVariable Long itemId,
                               @Valid @RequestBody ItemDto itemDto) {
         return ItemMapper.toDto(itemService.updateItem(userId, itemId, ItemMapper.toItem(itemDto)));
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable int itemId) {
+    public ItemDto getItemById(@PathVariable Long itemId) {
         return ItemMapper.toDto(itemService.getItemById(itemId));
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@RequestHeader("X-Sharer-User-Id") int userId,
-                           @PathVariable int itemId) {
+    public void deleteItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                           @PathVariable Long itemId) {
         itemService.deleteItem(userId, itemId);
     }
 

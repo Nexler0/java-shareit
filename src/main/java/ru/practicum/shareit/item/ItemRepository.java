@@ -11,7 +11,9 @@ import java.util.List;
 @RepositoryRestResource(path = "items")
 public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositoryCustom{
 
-    List<Item> findItemByUserId(int userId);
+    @Query("select i from Item i where i.user.id = ?1")
+    List<Item> findItemByUserId(Long userId);
 
-    Item getItemById(int itemId);
+    @Query("select i from Item i where i.id = ?1")
+    Item getItemById(Long itemId);
 }

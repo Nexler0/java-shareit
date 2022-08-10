@@ -1,19 +1,21 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.List;
-
 @RepositoryRestResource(path = "users")
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 
-//    User addUser(User user);
-//
-//    List<User> getAllUsers();
-//
-//    User getUserById(int userId);
-//
-//    void deleteUser(int id);
+    @Query("select u from User u where upper(u.email) like upper(concat('%', ?1, '%'))")
+    public User findByEmailContainingIgnoreCase(String email);
+
+    @Query("select (count(u) > 0) from User u where u.id = ?1")
+    public Boolean existsUserById(Long id);
+
+    @Modifying
+    @Query("update User u set u.name = ?1, u.email = ?2 where u.id=?3")
+    public void setUserInfoById(String name, String email, Long id);
 }

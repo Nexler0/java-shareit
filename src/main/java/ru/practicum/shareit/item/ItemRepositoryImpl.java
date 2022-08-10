@@ -15,8 +15,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
     @Override
     public List<Item> findAllByUserId(Long userId) {
-        return null;
+        return itemRepository.findItemByUserId(userId);
     }
-
 
 }

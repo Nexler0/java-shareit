@@ -21,18 +21,18 @@ class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     @Override
-    public Item addNewItem(int userId, Item item) {
-        if (userRepository.findById((long) userId).isEmpty()
+    public Item addNewItem(Long userId, Item item) {
+        if (userRepository.existsUserById(userId)
                 && item.getAvailable() != null
                 && item.getName() != null && !item.getName().isEmpty()
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
-            item.setUserId((long) userId);
+            item.setUser(userRepository.getReferenceById(userId));
             return itemRepository.save(item);
-        } else if (userRepository.findById((long) userId).isEmpty()) {
+        } else if (userRepository.existsUserById(userId)) {
             throw new NotFoundException("пользователь не найден");
         } else if (item.getAvailable() == null
-                || item.getName() != null || !item.getDescription().isEmpty()
-                || item.getDescription() != null || !item.getName().isEmpty()) {
+                && item.getName() == null && item.getName().isEmpty()
+                && item.getDescription() == null && item.getDescription().isEmpty()) {
             throw new ValidationException("Входные условия item");
         } else {
             throw new NotFoundException("Пользователь не найден");
@@ -40,9 +40,9 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void deleteItem(int userId, int itemId) {
-        if (itemRepository.getItemById(itemId).getUserId() == userId) {
-            itemRepository.deleteById((long) itemId);
+    public void deleteItem(Long userId, Long itemId) {
+        if (itemRepository.getItemById(itemId).getUser().getId().equals(userId)) {
+            itemRepository.deleteById(itemId);
         } else {
             throw new AccessException("Доступ запрещен");
         }
@@ -69,7 +69,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByUserId(int userId) {
+    public List<Item> getItemsByUserId(Long userId) {
         if (userId == 0) {
             return itemRepository.findAll();
         } else {
@@ -78,28 +78,28 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(int itemId) {
-        return itemRepository.getItemById(itemId);
+    public Item getItemById(Long itemId) {
+        return itemRepository.getReferenceById(itemId);
     }
 
 
     @Override
-    public Item updateItem(int userId, int itemId, Item item) {
+    public Item updateItem(Long userId, Long itemId, Item item) {
         Item oldItem = itemRepository.getItemById(itemId);
 
-        if (userRepository.findById((long)userId).isEmpty() &&
-                itemRepository.getItemById(itemId) != null && userId == oldItem.getUserId()) {
+        if (userRepository.findById(userId).isEmpty() &&
+                itemRepository.getItemById(itemId) != null && userId.equals(oldItem.getUser().getId())) {
             if (item.getName() != null && !item.getName().isEmpty()) {
                 oldItem.setName(item.getName());
-                itemRepository.deleteById((long) itemId);
+                itemRepository.deleteById(itemId);
             }
             if (item.getDescription() != null && !item.getDescription().isEmpty()) {
                 oldItem.setDescription(item.getDescription());
-                itemRepository.deleteById((long) itemId);
+                itemRepository.deleteById(itemId);
             }
             if (item.getAvailable() != oldItem.getAvailable() && item.getAvailable() != null) {
                 oldItem.setAvailable(item.getAvailable());
-                itemRepository.deleteById((long) itemId);
+                itemRepository.deleteById(itemId);
             }
             return itemRepository.save(oldItem);
         }

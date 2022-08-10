@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
@@ -8,18 +9,15 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User addUser(User user) {
@@ -30,9 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isValidateCreateUser(User user) {
-        if (user.getEmail() != null && !user.getName().isEmpty()
-                && user.getEmail() != null && !user.getEmail().isEmpty()
-                && !userRepository.findAll().contains(user)) {
+        if (user.getEmail() != null && !user.getName().isEmpty() &&
+                user.getEmail() != null && !user.getEmail().isEmpty()) {
             return true;
         }
         if (user.getEmail() == null) {
@@ -41,18 +38,19 @@ public class UserServiceImpl implements UserService {
         throw new ConflictException("Ошибка валидации");
     }
 
-    private boolean isValidateUpdateUser(User user)  {
-        if (user.getId() == null || user.getId() == 0) {
-//            return !user.equals(userRepository.getReferenceById(user.getId()));
-            return false;
-        } else if (user.getId() > 0) {
-            return userRepository.findAll().stream().noneMatch(user1 -> user1.equals(user));
-        } else {
-            if (userRepository.findAll().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
-                throw new EmptyListException("Ошибка валидации email");
+    private boolean isValidateUpdateUser(User user) {
+        if (user != null) {
+            if (user.getId() != null) {
+                return userRepository.findAll().stream().noneMatch(user1 -> user1.equals(user));
             } else {
-                return true;
+                if (userRepository.findByEmailContainingIgnoreCase(user.getEmail()) != null) {
+                    throw new EmptyListException("Ошибка валидации email");
+                } else {
+                    return true;
+                }
             }
+        } else {
+            return false;
         }
     }
 
@@ -75,27 +73,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long userId) {
-        User user = userRepository.getReferenceById(userId);
-        if (user.getName() != null) {
-            return user;
-        } else {
-            throw new NotFoundException("Пользователь не найден");
+        if (userRepository.existsUserById(userId)) {
+            return userRepository.getReferenceById(userId);
         }
+        throw new NotFoundException("Пользователь не найден");
     }
 
+    @Transactional
     @Override
     public User updateUser(Long userId, User user) {
         User oldUser = getUserById(userId);
 
         if (user.getEmail() != null && !user.getEmail().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setEmail(user.getEmail());
-            userRepository.deleteById(userId);
+        } else {
+            user.setEmail(oldUser.getEmail());
         }
-        if (user.getName() != null && !user.getName().isEmpty() && isValidateUpdateUser(user)) {
+        if (user.getName() != null && !user.getName().isEmpty()) {
             oldUser.setName(user.getName());
-            userRepository.deleteById(userId);
+        } else {
+            user.setName(oldUser.getName());
         }
-        userRepository.save(oldUser);
+        userRepository.setUserInfoById(user.getName(), user.getEmail(), userId);
         return oldUser;
     }
 }

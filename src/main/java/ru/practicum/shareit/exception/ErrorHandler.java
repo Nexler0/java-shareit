@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler({ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse incorrectParameter(final ValidationException e) {
         return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
     public ErrorResponse incorrectParameter(final NotFoundException e) {
         return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));

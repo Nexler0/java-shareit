@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface ItemService {
 
-    Item addNewItem(int userId, Item item);
+    Item addNewItem(Long userId, Item item);
 
-    void deleteItem(int userId, int itemId);
+    void deleteItem(Long userId, Long itemId);
 
-    List<Item> getItemsByUserId(int userId);
+    List<Item> getItemsByUserId(Long userId);
 
     List<Item> getAllItems();
 
-    Item updateItem(int userId, int itemId, Item item);
+    Item updateItem(Long userId, Long itemId, Item item);
 
-    Item getItemById(int itemId);
+    Item getItemById(Long itemId);
 
     List<Item> findItemByRequest(String text);
 }
