@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         throw new ConflictException("Ошибка валидации");
     }
 
-    private boolean isValidateUpdateUser(User user) {
+    private boolean isValidateUpdateUser(User user)  {
         if (user.getId() == null || user.getId() == 0) {
 //            return !user.equals(userRepository.getReferenceById(user.getId()));
             return false;
