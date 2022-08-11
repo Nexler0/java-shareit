@@ -7,6 +7,7 @@ import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,16 +27,17 @@ class ItemServiceImpl implements ItemService {
                 && item.getAvailable() != null
                 && item.getName() != null && !item.getName().isEmpty()
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
-            item.setUser(userRepository.getReferenceById(userId));
+            item.setUser(userRepository.getUserById(userId));
+            // TODO item.getItemRequest()
             return itemRepository.save(item);
-        } else if (userRepository.existsUserById(userId)) {
+        } else if (!userRepository.existsUserById(userId)) {
             throw new NotFoundException("пользователь не найден");
         } else if (item.getAvailable() == null
-                && item.getName() == null && item.getName().isEmpty()
-                && item.getDescription() == null && item.getDescription().isEmpty()) {
+                || item.getName() == null || item.getName().isEmpty()
+                || item.getDescription() == null || item.getDescription().isEmpty()) {
             throw new ValidationException("Входные условия item");
         } else {
-            throw new NotFoundException("Пользователь не найден");
+            throw new ValidationException("Ошибка валидации Item");
         }
     }
 
@@ -70,7 +72,7 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByUserId(Long userId) {
-        if (userId == 0) {
+        if (userId == null || userId == 0) {
             return itemRepository.findAll();
         } else {
             return itemRepository.findItemByUserId(userId);
@@ -79,29 +81,43 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(Long itemId) {
-        return itemRepository.getReferenceById(itemId);
+        if (itemId <= itemRepository.count()) {
+            return itemRepository.getItemById(itemId);
+        } else {
+            throw new NotFoundException("Item not found");
+        }
     }
 
-
+    @Transactional
     @Override
     public Item updateItem(Long userId, Long itemId, Item item) {
         Item oldItem = itemRepository.getItemById(itemId);
+        boolean is_update = false;
+        Long requestId = null;
 
-        if (userRepository.findById(userId).isEmpty() &&
-                itemRepository.getItemById(itemId) != null && userId.equals(oldItem.getUser().getId())) {
+        if (userRepository.existsUserById(userId)
+                && itemRepository.existsItemById(itemId)
+                && userId.equals(oldItem.getUser().getId())) {
             if (item.getName() != null && !item.getName().isEmpty()) {
                 oldItem.setName(item.getName());
-                itemRepository.deleteById(itemId);
+                is_update = true;
             }
             if (item.getDescription() != null && !item.getDescription().isEmpty()) {
                 oldItem.setDescription(item.getDescription());
-                itemRepository.deleteById(itemId);
+                is_update = true;
             }
             if (item.getAvailable() != oldItem.getAvailable() && item.getAvailable() != null) {
                 oldItem.setAvailable(item.getAvailable());
-                itemRepository.deleteById(itemId);
+                is_update = true;
             }
-            return itemRepository.save(oldItem);
+            if (oldItem.getItemRequest() != null) {
+                requestId = oldItem.getItemRequest().getId();
+            }
+            if (is_update) {
+                itemRepository.setItemInfoById(oldItem.getName(), oldItem.getDescription(),
+                        oldItem.getAvailable(), requestId, oldItem.getId());
+                return oldItem;
+            }
         }
         throw new NotFoundException("Итернал");
     }

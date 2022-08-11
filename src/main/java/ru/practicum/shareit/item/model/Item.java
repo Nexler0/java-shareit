@@ -1,13 +1,12 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -18,26 +17,28 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "items_name")
+    @NotNull
     private String name;
 
     @Column(name = "items_description")
+    @NotNull
     private String description;
 
     @Column(name = "items_available")
+    @NotNull
     private Boolean available;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "request_id")
     private ItemRequest itemRequest;
 

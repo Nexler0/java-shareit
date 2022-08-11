@@ -8,11 +8,12 @@ import java.util.List;
 
 @Component
 public class ItemMapper {
-
+    
     public static ItemDto toDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .userId(item.getUser().getId())
+                .requestId(null)
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
@@ -21,9 +22,12 @@ public class ItemMapper {
 
     public static Item toItem(ItemDto itemDto) {
         Item item = new Item();
+        item.setId(itemDto.getId());
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
+        item.setUser(null);
+        item.setItemRequest(null);
         return item;
     }
 

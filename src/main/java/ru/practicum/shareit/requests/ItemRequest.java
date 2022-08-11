@@ -24,6 +24,6 @@ public class ItemRequest {
     @Column(name = "request_description")
     private String description;
 
-    @Column(name = "requestor_id")
-    private Long requestorId;
+    @Column(name = "requester_id")
+    private Long requesterId;
 }
