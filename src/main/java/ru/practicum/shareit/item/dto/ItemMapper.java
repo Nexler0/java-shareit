@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public class ItemMapper {
-    
+
     public static ItemDto toDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
@@ -32,8 +32,8 @@ public class ItemMapper {
     }
 
     public static List<ItemDto> mapToItemDto(Iterable<Item> items) {
-        List <ItemDto> result = new ArrayList<>();
-        for (Item item : items){
+        List<ItemDto> result = new ArrayList<>();
+        for (Item item : items) {
             result.add(ItemMapper.toDto(item));
         }
         return result;
