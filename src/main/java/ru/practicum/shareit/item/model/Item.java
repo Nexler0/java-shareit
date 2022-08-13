@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
@@ -41,6 +42,12 @@ public class Item {
     @OneToOne
     @JoinColumn(name = "request_id")
     private ItemRequest itemRequest;
+
+    @Transient
+    private Booking lastBooking;
+
+    @Transient
+    private Booking nextBooking;
 
     @Override
     public boolean equals(Object o) {

@@ -10,8 +10,6 @@ import ru.practicum.shareit.user.UserRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -52,17 +50,10 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> findItemByRequest(String text) {
-        List<Item> result = new ArrayList<>();
-        if (text != null && !text.isEmpty() && !text.isBlank()) {
-            result = itemRepository.findAll().stream().filter(
-                            item -> (item.getDescription().toLowerCase(Locale.ROOT)
-                                    .contains(text.toLowerCase(Locale.ROOT))
-                                    || item.getName().toLowerCase(Locale.ROOT)
-                                    .contains(text.toLowerCase(Locale.ROOT)))
-                                    && item.getAvailable())
-                    .collect(Collectors.toList());
+        if (text == null || text.isEmpty() || text.isBlank()) {
+            return new ArrayList<>();
         }
-        return result;
+        return itemRepository.search(text);
     }
 
     @Override

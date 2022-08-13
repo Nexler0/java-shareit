@@ -1,6 +1,8 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.model;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -31,9 +33,12 @@ public class Booking {
 
     @OneToOne
     @JoinColumn(name = "booker_id")
-    private User bookerId;
+    private User booker;
 
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "status")
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
     private Status status;
+
+    @Transient
+    private Boolean approved = Status.APPROVED == status;
 }

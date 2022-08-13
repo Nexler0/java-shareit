@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class BookingDto {
+public class BookingDtoIn {
     private Long id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private Long itemId;
     private Long bookerId;
     private Status status;

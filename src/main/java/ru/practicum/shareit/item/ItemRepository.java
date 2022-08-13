@@ -17,13 +17,17 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
     @Query("select i from Item i where i.id = ?1")
     Item getItemById(Long itemId);
 
-    Item getItemByItemRequest(Item item);
+
+    @Query("select i from Item i where lower(i.name) like lower(concat('%', ?1, '%'))" +
+            "or lower(i.description) like lower(concat('%', ?1, '%')) and i.available = true")
+    List<Item> search(String item);
 
     @Modifying
     @Query("update Item i set i.name = ?1, i.description = ?2, i.available = ?3, i.itemRequest = ?4" +
             " where i.id = ?5")
-    public void setItemInfoById(String name, String description, Boolean available, Long requestId, Long id);
+    void setItemInfoById(String name, String description, Boolean available, Long requestId, Long id);
 
+    @Query("select (count(i) > 0) from Item i where i.id = ?1")
     Boolean existsItemById(Long id);
 
 }
