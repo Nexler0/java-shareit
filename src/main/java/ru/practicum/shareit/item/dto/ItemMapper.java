@@ -1,41 +1,51 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.practicum.shareit.user.UserRepository;
 
 @Component
+@RequiredArgsConstructor
 public class ItemMapper {
 
-    public static ItemDto toDto(Item item) {
-        return ItemDto.builder()
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+
+    public ItemDtoOut toDto(Item item) {
+        return ItemDtoOut.builder()
                 .id(item.getId())
                 .userId(item.getUser().getId())
                 .requestId(null)
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .lastBooking(item.getLastBooking())
+                .nextBooking(item.getNextBooking())
                 .build();
     }
 
-    public static Item toItem(ItemDto itemDto) {
+    public Item toItem(ItemDtoIn itemDtoIn) {
         Item item = new Item();
-        item.setId(itemDto.getId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        item.setUser(null);
-        item.setItemRequest(null);
-        return item;
-    }
-
-    public static List<ItemDto> mapToItemDto(Iterable<Item> items) {
-        List<ItemDto> result = new ArrayList<>();
-        for (Item item : items) {
-            result.add(ItemMapper.toDto(item));
+        item.setId(itemDtoIn.getId());
+        item.setName(itemDtoIn.getName());
+        item.setDescription(itemDtoIn.getDescription());
+        item.setAvailable(itemDtoIn.getAvailable());
+        if (!userRepository.existsUserById(itemDtoIn.getUserId())) {
+            throw new NotFoundException("Пользователь не найден");
         }
-        return result;
+        item.setUser(userRepository.getUserById(itemDtoIn.getUserId()));
+        if (itemDtoIn.getLastBookingId() != null && bookingRepository.existsById(itemDtoIn.getLastBookingId())) {
+            item.setLastBooking(BookingMapper.toBookingShort(bookingRepository
+                    .getBookingById(itemDtoIn.getLastBookingId())));
+        }
+        if (itemDtoIn.getNextBookingId() != null &&bookingRepository.existsById(itemDtoIn.getNextBookingId())) {
+            item.setNextBooking(BookingMapper.toBookingShort(bookingRepository
+                    .getBookingById(itemDtoIn.getNextBookingId())));
+        }
+        return item;
     }
 }

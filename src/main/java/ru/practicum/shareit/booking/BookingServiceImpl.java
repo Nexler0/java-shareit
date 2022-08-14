@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.user.model.User;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,13 +37,17 @@ public class BookingServiceImpl implements BookingService {
                 case "**PAST**":
                     return bookingRepository.getAllByEndDateBeforeOrderByStartDateDesc(LocalDateTime.now());
                 case "FUTURE":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDateDesc(LocalDateTime.now());
+                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now());
                 case "WAITING":
-                    return bookingRepository.getAllByStatusContainsOrderByStartDateDesc("WAITING");
+                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                            .filter(booking -> booking.getStatus() == Status.WAITING && !booking.getItem()
+                                    .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllByStatusContainsOrderByStartDateDesc("REJECTED");
+                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                            .filter(booking -> booking.getStatus() == Status.REJECTED && !booking.getItem()
+                                    .getUser().getId().equals(userId)).collect(Collectors.toList());
                 default:
-                    throw new ValidationException("Неизвесный статус поиска");
+                    throw new ValidationException("Unknown state: " + status);
             }
         }
         throw new NotFoundException("Пользователь не найден");
@@ -63,9 +69,13 @@ public class BookingServiceImpl implements BookingService {
                     return bookingRepository.getBookingByItemUserIdAndStartDateAfterOrderByStartDateDesc(userId,
                             LocalDateTime.now());
                 case "WAITING":
-                    return bookingRepository.getBookingByItemUserIdAndStatusContainsOrderByStartDateDesc("WAITING");
+                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                            .filter(booking -> booking.getStatus() == Status.WAITING && booking.getItem()
+                                    .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getBookingByItemUserIdAndStatusContainsOrderByStartDateDesc("REJECTED");
+                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                            .filter(booking -> booking.getStatus() == Status.REJECTED && booking.getItem().getUser()
+                                    .getId().equals(userId)).collect(Collectors.toList());
                 default:
                     throw new ValidationException("Unknown state: " + status);
             }
@@ -88,6 +98,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    @Transactional
     @Override
     public Booking createBooking(Long userId, Booking booking) {
         LocalDateTime now = LocalDateTime.now().withNano(0);
@@ -103,19 +114,27 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new NotFoundException("Пользователь не создан");
         }
-        Item item = booking.getItem();
+
+        if (booking.getStatus() == null) {
+            booking.setStatus(Status.WAITING);
+        }
+
+        Item item = itemRepository.getItemById(booking.getItem().getId());
         if (item != null) {
+            BookingShort setBooking = new BookingShort(booking.getId(), userId);
             if (item.getAvailable()) {
+                if (item.getNextBooking() == null) {
+                    item.setLastBooking(setBooking);
+                } else {
+                    item.setNextBooking(item.getNextBooking());
+                    item.setLastBooking(setBooking);
+                }
                 booking.setItem(item);
             } else {
                 throw new ValidationException("Предмет недоступен");
             }
         } else {
             throw new NotFoundException("Такой предмет не создан");
-        }
-
-        if (booking.getStatus() == null) {
-            booking.setStatus(Status.WAITING);
         }
         return bookingRepository.save(booking);
     }
@@ -126,8 +145,8 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.getBookingById(bookingId);
         if (userRepository.existsUserById(userId)
                 && booking.getItem().getUser().getId().equals(userId)) {
-            if (approve && booking.getApproved()){
-                throw new ValidationException("Уже тодтверждено");
+            if (booking.getStatus().equals(Status.APPROVED)) {
+                throw new ValidationException("Уже подтверждено");
             }
             if (approve) {
                 booking.setStatus(Status.APPROVED);
@@ -139,6 +158,5 @@ public class BookingServiceImpl implements BookingService {
         }
         throw new NotFoundException("Пользователь не является владельцем");
     }
-
 
 }

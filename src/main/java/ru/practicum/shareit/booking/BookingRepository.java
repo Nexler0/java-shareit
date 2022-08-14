@@ -25,20 +25,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     @Query("update Booking b set b.status = ?1 where b.id= ?2")
     void setBookingInfoById(Status status, Long id);
 
-//    @Query("select b, booker.id, item.id, item.name from Booking as b where b.id = ?1")
-//    Booking getBookingByIdWithJoin(Long id);
-
-    @Query("select b from Booking b where b.startDate < ?1 order by b.startDate DESC")
+    @Query("select b from Booking b where b.startDate < ?1 order by b.startDate ")
     List<Booking> getAllByStartDateBeforeOrderByStartDateDesc(LocalDateTime timeMoment);
 
     @Query("select b from Booking b where b.endDate < ?1 order by b.startDate DESC")
     List<Booking> getAllByEndDateBeforeOrderByStartDateDesc(LocalDateTime timeMoment);
 
     @Query("select b from Booking b where b.startDate > ?1 order by b.startDate DESC")
-    List<Booking> getAllByStartDateAfterOrderByStartDateDesc(LocalDateTime timeMoment);
-
-    @Query("select b from Booking b where b.status like concat('%', ?1, '%') order by b.startDate Desc")
-    List<Booking> getAllByStatusContainsOrderByStartDateDesc(String status);
+    List<Booking> getAllByStartDateAfterOrderByStartDate(LocalDateTime timeMoment);
 
     @Query("select b from Booking b where b.item.user.id = ?1 order by b.startDate DESC")
     List<Booking> getBookingByItemUserIdOrderByStartDateDesc(Long userId);
@@ -52,8 +46,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate > ?2 order by b.startDate Desc")
     List<Booking> getBookingByItemUserIdAndStartDateAfterOrderByStartDateDesc(Long userId, LocalDateTime now);
 
-    @Query("select b from Booking b " +
-            "where b.item.user.id = ?1 and b.status like concat('%', ?2, '%') " +
-            "order by b.startDate Desc")
-    List<Booking> getBookingByItemUserIdAndStatusContainsOrderByStartDateDesc(String waiting);
+    @Query("select b from Booking b where b.item.id = ?1")
+    List<Booking> getBookingByItemId(Long id);
 }

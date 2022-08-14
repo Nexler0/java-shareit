@@ -3,13 +3,18 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -18,6 +23,7 @@ class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public Item addNewItem(Long userId, Item item) {
@@ -25,8 +31,6 @@ class ItemServiceImpl implements ItemService {
                 && item.getAvailable() != null
                 && item.getName() != null && !item.getName().isEmpty()
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
-            item.setUser(userRepository.getUserById(userId));
-            // TODO item.getItemRequest()
             return itemRepository.save(item);
         } else if (!userRepository.existsUserById(userId)) {
             throw new NotFoundException("пользователь не найден");
@@ -53,30 +57,53 @@ class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty() || text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(text);
+        return itemRepository.search(text).stream().map(this::setBookingToItem).collect(Collectors.toList());
     }
 
     @Override
     public List<Item> getAllItems() {
-        return itemRepository.findAll();
+        return itemRepository.findAll().stream().map(this::setBookingToItem).collect(Collectors.toList());
     }
 
     @Override
     public List<Item> getItemsByUserId(Long userId) {
         if (userId == null || userId == 0) {
-            return itemRepository.findAll();
+            return itemRepository.findAll().stream().map(this::setBookingToItem).collect(Collectors.toList());
         } else {
-            return itemRepository.findItemByUserId(userId);
+            return itemRepository.findItemByUserId(userId).stream().map(this::setBookingToItem)
+                    .collect(Collectors.toList());
         }
     }
 
     @Override
-    public Item getItemById(Long itemId) {
+    public Item getItemById(Long userid, Long itemId) {
         if (itemId <= itemRepository.count()) {
-            return itemRepository.getItemById(itemId);
+            Item item = itemRepository.getItemById(itemId);
+            if (userid.equals(item.getUser().getId())) {
+                return setBookingToItem(item);
+            } else {
+                return item;
+            }
         } else {
             throw new NotFoundException("Item not found");
         }
+    }
+
+    private Item setBookingToItem(Item item) {
+        List<Booking> bookings = bookingRepository.getBookingByItemId(item.getId()).stream()
+                .sorted(new Comparator<Booking>() {
+                    @Override
+                    public int compare(Booking o1, Booking o2) {
+                        return (o1.getStartDate().compareTo(o2.getStartDate()));
+                    }
+                }).collect(Collectors.toList());
+        if (bookings.size() == 1) {
+            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(0)));
+        } else if (bookings.size() > 1) {
+            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 2)));
+            item.setNextBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 1)));
+        }
+        return item;
     }
 
     @Transactional
@@ -84,7 +111,6 @@ class ItemServiceImpl implements ItemService {
     public Item updateItem(Long userId, Long itemId, Item item) {
         Item oldItem = itemRepository.getItemById(itemId);
         boolean is_update = false;
-        Long requestId = null;
 
         if (userRepository.existsUserById(userId)
                 && itemRepository.existsItemById(itemId)
@@ -101,12 +127,7 @@ class ItemServiceImpl implements ItemService {
                 oldItem.setAvailable(item.getAvailable());
                 is_update = true;
             }
-            if (oldItem.getItemRequest() != null) {
-                requestId = oldItem.getItemRequest().getId();
-            }
             if (is_update) {
-                itemRepository.setItemInfoById(oldItem.getName(), oldItem.getDescription(),
-                        oldItem.getAvailable(), requestId, oldItem.getId());
                 return oldItem;
             }
         }

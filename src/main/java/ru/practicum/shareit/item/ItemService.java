@@ -16,7 +16,7 @@ public interface ItemService {
 
     Item updateItem(Long userId, Long itemId, Item item);
 
-    Item getItemById(Long itemId);
+    Item getItemById(Long userId, Long itemId);
 
     List<Item> findItemByRequest(String text);
 }

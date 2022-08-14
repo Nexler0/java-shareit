@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS items
     items_description VARCHAR(500) NOT NULL,
     items_available   BOOLEAN,
     request_id        BIGINT,
-    CONSTRAINT FK_users_id_for_items FOREIGN KEY (user_id) REFERENCES users (id)
+    last_booking_id   BIGINT,
+    next_booking_id   BIGINT,
+        CONSTRAINT FK_users_id_for_items FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS requests

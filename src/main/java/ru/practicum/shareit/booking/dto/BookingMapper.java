@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserRepository;
@@ -38,5 +39,9 @@ public class BookingMapper {
         booking.setItem(itemRepository.getItemById(bookingDtoIn.getItemId()));
         booking.setBooker(userRepository.getUserById(bookingDtoIn.getBookerId()));
         return booking;
+    }
+
+    public static BookingShort toBookingShort(Booking booking){
+        return new BookingShort(booking.getId(), booking.getBooker().getId());
     }
 }

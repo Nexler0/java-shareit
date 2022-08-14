@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -36,9 +36,9 @@ public class Booking {
     private User booker;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
     private Status status;
 
     @Transient
+    @JsonIgnore
     private Boolean approved = Status.APPROVED == status;
 }
