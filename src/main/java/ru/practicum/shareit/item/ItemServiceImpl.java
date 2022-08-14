@@ -90,7 +90,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     private Item setBookingToItem(Item item) {
-        List<Booking> bookings = bookingRepository.getBookingByItemId(item.getId()).stream()
+        List<Booking> bookings = bookingRepository.getBookingsByItemId(item.getId()).stream()
                 .sorted(new Comparator<Booking>() {
                     @Override
                     public int compare(Booking o1, Booking o2) {
@@ -98,10 +98,10 @@ class ItemServiceImpl implements ItemService {
                     }
                 }).collect(Collectors.toList());
         if (bookings.size() == 1) {
-            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(0)));
+            item.setLastBooking(bookings.get(0));
         } else if (bookings.size() > 1) {
-            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 2)));
-            item.setNextBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 1)));
+            item.setLastBooking(bookings.get(bookings.size() - 2));
+            item.setNextBooking(bookings.get(bookings.size() - 1));
         }
         return item;
     }

@@ -3,11 +3,13 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
@@ -34,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
                     return bookingRepository.findAll();
                 case "CURRENT":
                     return bookingRepository.getAllByStartDateBeforeOrderByStartDateDesc(LocalDateTime.now());
-                case "**PAST**":
+                case "PAST":
                     return bookingRepository.getAllByEndDateBeforeOrderByStartDateDesc(LocalDateTime.now());
                 case "FUTURE":
                     return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now());
@@ -62,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
                 case "CURRENT":
                     return bookingRepository.getBookingByItemUserIdAndStartDateBeforeOrderByStartDateDesc(userId,
                             LocalDateTime.now());
-                case "**PAST**":
+                case "PAST":
                     return bookingRepository.getBookingByItemUserIdAndEndDateBeforeOrderByStartDateDesc(userId,
                             LocalDateTime.now());
                 case "FUTURE":
@@ -124,10 +127,10 @@ public class BookingServiceImpl implements BookingService {
             BookingShort setBooking = new BookingShort(booking.getId(), userId);
             if (item.getAvailable()) {
                 if (item.getNextBooking() == null) {
-                    item.setLastBooking(setBooking);
+                    item.setLastBooking(booking);
                 } else {
                     item.setNextBooking(item.getNextBooking());
-                    item.setLastBooking(setBooking);
+                    item.setLastBooking(booking);
                 }
                 booking.setItem(item);
             } else {

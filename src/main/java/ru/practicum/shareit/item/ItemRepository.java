@@ -23,10 +23,6 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
     List<Item> search(String item);
 
     @Modifying
-//    @Query("update Item i set i.name = ?1, i.description = ?2, i.available = ?3," +
-//            "i.lastBooking = ?4, i.nextBooking = ?5 where i.id = ?6")
-//    void setItemInfoById(String name, String description, Boolean available,
-//                         Long lastBookingId, Long nextBookingId, Long id);
     @Query("update Item i set i.name = ?1, i.description = ?2, i.available = ?3" +
             "where i.id = ?4")
     void setItemInfoById(String name, String description, Boolean available,

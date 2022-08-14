@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "bookings")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class Booking {
 
@@ -27,7 +26,7 @@ public class Booking {
     @Column(name = "end_time")
     private LocalDateTime endDate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     private Item item;
 

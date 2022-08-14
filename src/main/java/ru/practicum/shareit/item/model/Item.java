@@ -1,13 +1,17 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingShort;
+import ru.practicum.shareit.comment.model.CommentShort;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -43,11 +47,16 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest itemRequest;
 
-    @Transient
-    private BookingShort lastBooking;
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "last_booking_id")
+    private Booking lastBooking;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "next_booking_id")
+    private Booking nextBooking;
 
     @Transient
-    private BookingShort nextBooking;
+    private List<CommentShort> comments;
 
     @Override
     public boolean equals(Object o) {

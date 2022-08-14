@@ -21,6 +21,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     @Query("select b from Booking b where b.id = ?1")
     Booking getBookingById(Long bookingId);
 
+    @Query("select b from Booking b where b.item.id = ?1")
+    Booking getBookingByItemId(Long itemId);
+
     @Modifying
     @Query("update Booking b set b.status = ?1 where b.id= ?2")
     void setBookingInfoById(Status status, Long id);
@@ -47,5 +50,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     List<Booking> getBookingByItemUserIdAndStartDateAfterOrderByStartDateDesc(Long userId, LocalDateTime now);
 
     @Query("select b from Booking b where b.item.id = ?1")
-    List<Booking> getBookingByItemId(Long id);
+    List<Booking> getBookingsByItemId(Long id);
+
+    @Query("select (count(b) > 0) from Booking b where b.booker.id = ?1")
+    Boolean existsBookingByBookerId(Long id);
 }
