@@ -5,11 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
@@ -25,10 +23,8 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingMapper bookingMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final BookingShortRepository bookingShortRepository;
 
     @Override
     public List<Booking> findAllBooking(Long userId, String status) {
@@ -37,7 +33,9 @@ public class BookingServiceImpl implements BookingService {
                 case "ALL":
                     return bookingRepository.findAll();
                 case "CURRENT":
-                    return bookingRepository.getAllByStartDateBeforeOrderByStartDateDesc(LocalDateTime.now());
+                    return bookingRepository.getAllByStartDateBeforeOrderByStartDateDesc(LocalDateTime.now())
+                            .stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
+                            ).collect(Collectors.toList());
                 case "PAST":
                     return bookingRepository.getAllByEndDateBeforeOrderByStartDateDesc(LocalDateTime.now());
                 case "FUTURE":
@@ -65,7 +63,8 @@ public class BookingServiceImpl implements BookingService {
                     return bookingRepository.getBookingByItemUserIdOrderByStartDateDesc(userId);
                 case "CURRENT":
                     return bookingRepository.getBookingByItemUserIdAndStartDateBeforeOrderByStartDateDesc(userId,
-                            LocalDateTime.now());
+                            LocalDateTime.now()).stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
+                            ).collect(Collectors.toList());
                 case "PAST":
                     return bookingRepository.getBookingByItemUserIdAndEndDateBeforeOrderByStartDateDesc(userId,
                             LocalDateTime.now());

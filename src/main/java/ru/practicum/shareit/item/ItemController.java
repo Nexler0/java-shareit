@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.CommentService;
+import ru.practicum.shareit.comment.model.CommentShort;
 import ru.practicum.shareit.item.dto.ItemDtoIn;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -23,12 +24,8 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDtoOut> get(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getItemsByUserId(userId).stream().map(itemMapper::toDto).sorted(new Comparator<ItemDtoOut>() {
-            @Override
-            public int compare(ItemDtoOut o1, ItemDtoOut o2) {
-                return o1.getId().compareTo(o2.getId());
-            }
-        }).collect(Collectors.toList());
+        return itemService.getItemsByUserId(userId).stream().map(itemMapper::toDto)
+                .sorted((o1, o2) -> o1.getId().compareTo(o2.getId())).collect(Collectors.toList());
     }
 
     @PostMapping
@@ -53,9 +50,9 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public ItemDtoOut postCommentToItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @PathVariable Long itemId,
-                                        @Valid @RequestBody Comment comment) {
+    public CommentShort postCommentToItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                          @PathVariable Long itemId,
+                                          @Valid @RequestBody Comment comment) {
         return commentService.addComment(userId, itemId, comment);
     }
 

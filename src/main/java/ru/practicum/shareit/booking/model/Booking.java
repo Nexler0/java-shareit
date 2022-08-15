@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;

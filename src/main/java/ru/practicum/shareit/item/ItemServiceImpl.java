@@ -82,6 +82,8 @@ class ItemServiceImpl implements ItemService {
             if (userid.equals(item.getUser().getId())) {
                 return setBookingToItem(item);
             } else {
+                item.setLastBooking(null);
+                item.setNextBooking(null);
                 return item;
             }
         } else {
@@ -94,14 +96,14 @@ class ItemServiceImpl implements ItemService {
                 .sorted(new Comparator<Booking>() {
                     @Override
                     public int compare(Booking o1, Booking o2) {
-                        return (o1.getStartDate().compareTo(o2.getStartDate()));
+                        return (o2.getStartDate().compareTo(o1.getStartDate()));
                     }
                 }).collect(Collectors.toList());
         if (bookings.size() == 1) {
             item.setLastBooking(BookingMapper.toBookingShort(bookings.get(0)));
         } else if (bookings.size() > 1) {
-            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 2)));
-            item.setNextBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 1)));
+            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 1)));
+            item.setNextBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 2)));
         }
         return item;
     }

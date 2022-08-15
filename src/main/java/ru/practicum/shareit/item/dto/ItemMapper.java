@@ -9,7 +9,6 @@ import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class ItemMapper {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final BookingMapper bookingMapper;
 
     public ItemDtoOut toDto(Item item) {
         ItemDtoOut result = ItemDtoOut.builder()
@@ -74,26 +72,5 @@ public class ItemMapper {
             item.setComments(CommentMapper.toCommentShort(commentRepository.getAllByItemId(item.getId())));
         }
         return item;
-    }
-
-    public static ItemShort toItemShort(Item item) {
-        ItemShort result = new ItemShort();
-        result.setId(item.getId());
-        result.setName(item.getName());
-        result.setDescription(item.getDescription());
-        return result;
-    }
-
-    public static Item toItemFromItemShort(ItemShort itemShort) {
-        Item result = new Item();
-        result.setId(itemShort.getId());
-        result.setName(itemShort.getName());
-        result.setDescription(itemShort.getDescription());
-//        result.setLastBooking();
-//        result.setNextBooking();
-//        result.setComments();
-//        result.setUser();
-//        result.setAvailable();
-        return result;
     }
 }
