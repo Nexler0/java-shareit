@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class Booking {
     @Column(name = "end_time")
     private LocalDateTime endDate;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "item_id")
     private Item item;
 

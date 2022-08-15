@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.user.UserRepository;
 
 @Component
@@ -42,6 +43,24 @@ public class BookingMapper {
     }
 
     public static BookingShort toBookingShort(Booking booking){
-        return new BookingShort(booking.getId(), booking.getBooker().getId());
+        BookingShort bookingShort = new BookingShort();
+        bookingShort.setId(booking.getId());
+        bookingShort.setBookerId(booking.getBooker().getId());
+        bookingShort.setItemId(booking.getItem().getId());
+        bookingShort.setStartDate(booking.getStartDate());
+        bookingShort.setEndDate(booking.getEndDate());
+        bookingShort.setStatus(booking.getStatus());
+        return bookingShort;
+    }
+
+    public Booking toBookingFromShort(BookingShort bookingShort){
+        Booking booking = new Booking();
+        booking.setId(bookingShort.getId());
+        booking.setBooker(userRepository.getUserById(bookingShort.getBookerId()));
+        booking.setItem(itemRepository.getItemById(bookingShort.getItemId()));
+        booking.setStartDate(bookingShort.getStartDate());
+        booking.setEndDate(bookingShort.getEndDate());
+        booking.setStatus(bookingShort.getStatus());
+        return booking;
     }
 }

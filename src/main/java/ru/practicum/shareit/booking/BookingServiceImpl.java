@@ -28,6 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingShortRepository bookingShortRepository;
 
     @Override
     public List<Booking> findAllBooking(Long userId, String status) {
@@ -117,29 +118,28 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new NotFoundException("Пользователь не создан");
         }
-
         if (booking.getStatus() == null) {
             booking.setStatus(Status.WAITING);
         }
 
         Item item = itemRepository.getItemById(booking.getItem().getId());
+        Booking bookingSaved;
         if (item != null) {
-            BookingShort setBooking = new BookingShort(booking.getId(), userId);
             if (item.getAvailable()) {
+                bookingSaved = bookingRepository.save(booking);
                 if (item.getNextBooking() == null) {
-                    item.setLastBooking(booking);
+                    item.setLastBooking(BookingMapper.toBookingShort(bookingSaved));
                 } else {
                     item.setNextBooking(item.getNextBooking());
-                    item.setLastBooking(booking);
+                    item.setLastBooking(BookingMapper.toBookingShort(bookingSaved));
                 }
-                booking.setItem(item);
+                return bookingSaved;
             } else {
                 throw new ValidationException("Предмет недоступен");
             }
         } else {
             throw new NotFoundException("Такой предмет не создан");
         }
-        return bookingRepository.save(booking);
     }
 
     @Transactional
@@ -161,5 +161,4 @@ public class BookingServiceImpl implements BookingService {
         }
         throw new NotFoundException("Пользователь не является владельцем");
     }
-
 }

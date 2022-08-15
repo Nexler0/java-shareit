@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS requests CASCADE;
 DROP TABLE IF EXISTS bookings CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS bookings_short CASCADE;
 DROP TYPE IF EXISTS status_enum CASCADE;
 
 
@@ -57,4 +58,15 @@ CREATE TABLE IF NOT EXISTS comments
     item_id   BIGINT,
     author_id BIGINT,
     CONSTRAINT pk_comments PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS bookings_short
+(
+    id         BIGINT NOT NULL,
+    booker_id  BIGINT,
+    start_date TIMESTAMP WITHOUT TIME ZONE,
+    end_date   TIMESTAMP WITHOUT TIME ZONE,
+    item_id    BIGINT,
+    status     status_enum,
+    CONSTRAINT pk_bookings_short PRIMARY KEY (id)
 );

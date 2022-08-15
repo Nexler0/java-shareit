@@ -98,10 +98,10 @@ class ItemServiceImpl implements ItemService {
                     }
                 }).collect(Collectors.toList());
         if (bookings.size() == 1) {
-            item.setLastBooking(bookings.get(0));
+            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(0)));
         } else if (bookings.size() > 1) {
-            item.setLastBooking(bookings.get(bookings.size() - 2));
-            item.setNextBooking(bookings.get(bookings.size() - 1));
+            item.setLastBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 2)));
+            item.setNextBooking(BookingMapper.toBookingShort(bookings.get(bookings.size() - 1)));
         }
         return item;
     }

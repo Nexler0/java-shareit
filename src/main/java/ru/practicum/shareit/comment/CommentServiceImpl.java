@@ -30,7 +30,6 @@ public class CommentServiceImpl implements CommentService {
     public ItemDtoOut addComment(Long userId, Long itemId, Comment comment) {
         if (itemRepository.existsItemById(itemId) && userRepository.existsUserById(userId)
                 && bookingRepository.existsBookingByBookerId(userId)) {
-//            Item item = itemMapper.toItem(itemMapper.toDto(itemRepository.getItemById(itemId)));
             Booking booking = bookingRepository.getBookingById(itemRepository.getItemById(itemId).getLastBooking().getId());
             if (booking.getStatus().equals(Status.APPROVED)) {
                 comment.setAuthor(userRepository.getUserById(userId));

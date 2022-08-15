@@ -1,9 +1,10 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.comment.model.CommentShort;
 import ru.practicum.shareit.requests.ItemRequest;
@@ -49,11 +50,11 @@ public class Item {
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "last_booking_id")
-    private Booking lastBooking;
+    private BookingShort lastBooking;
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "next_booking_id")
-    private Booking nextBooking;
+    private BookingShort nextBooking;
 
     @Transient
     private List<CommentShort> comments;
