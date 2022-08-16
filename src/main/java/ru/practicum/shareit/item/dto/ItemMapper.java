@@ -52,6 +52,7 @@ public class ItemMapper {
 
     public Item toItem(ItemDtoIn itemDtoIn) {
         Item item = new Item();
+
         item.setId(itemDtoIn.getId());
         item.setName(itemDtoIn.getName());
         item.setDescription(itemDtoIn.getDescription());

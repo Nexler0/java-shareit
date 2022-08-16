@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ItemDtoIn {
+
     private Long id;
     private Long userId;
     private Long requestId;

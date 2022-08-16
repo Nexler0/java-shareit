@@ -14,7 +14,6 @@ import ru.practicum.shareit.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,12 +94,8 @@ class ItemServiceImpl implements ItemService {
 
     private Item setBookingToItem(Item item) {
         List<Booking> bookings = bookingRepository.getBookingsByItemId(item.getId()).stream()
-                .sorted(new Comparator<Booking>() {
-                    @Override
-                    public int compare(Booking o1, Booking o2) {
-                        return (o2.getStartDate().compareTo(o1.getStartDate()));
-                    }
-                }).collect(Collectors.toList());
+                .sorted((o1, o2) -> (o2.getStartDate().compareTo(o1.getStartDate())))
+                .collect(Collectors.toList());
         if (bookings.size() == 1) {
             item.setLastBooking(BookingMapper.toBookingShort(bookings.get(0)));
         } else if (bookings.size() > 1) {
@@ -114,24 +109,24 @@ class ItemServiceImpl implements ItemService {
     @Override
     public Item updateItem(Long userId, Long itemId, Item item) {
         Item oldItem = itemRepository.getItemById(itemId);
-        boolean is_update = false;
+        boolean isUpdate = false;
 
         if (userRepository.existsUserById(userId)
                 && itemRepository.existsItemById(itemId)
                 && userId.equals(oldItem.getUser().getId())) {
             if (item.getName() != null && !item.getName().isEmpty()) {
                 oldItem.setName(item.getName());
-                is_update = true;
+                isUpdate = true;
             }
             if (item.getDescription() != null && !item.getDescription().isEmpty()) {
                 oldItem.setDescription(item.getDescription());
-                is_update = true;
+                isUpdate = true;
             }
             if (item.getAvailable() != oldItem.getAvailable() && item.getAvailable() != null) {
                 oldItem.setAvailable(item.getAvailable());
-                is_update = true;
+                isUpdate = true;
             }
-            if (is_update) {
+            if (isUpdate) {
                 return oldItem;
             }
         }
