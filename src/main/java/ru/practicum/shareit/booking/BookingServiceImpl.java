@@ -101,9 +101,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    @Transactional
-    @Override
-    public Booking createBooking(Long userId, Booking booking) {
+    private void isValidBooking(Long userId, Booking booking){
         LocalDateTime now = LocalDateTime.now().withNano(0);
 
         if (booking.getStartDate().isBefore(now) || booking.getEndDate().isBefore(now)) {
@@ -118,10 +116,15 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new NotFoundException("Пользователь не создан");
         }
+    }
+
+    @Transactional
+    @Override
+    public Booking createBooking(Long userId, Booking booking) {
+        isValidBooking(userId, booking);
         if (booking.getStatus() == null) {
             booking.setStatus(Status.WAITING);
         }
-
         Item item = itemRepository.getItemById(booking.getItem().getId());
         Booking bookingSaved;
 
