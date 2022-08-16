@@ -26,7 +26,6 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
 
-
     @Override
     public CommentShort addComment(Long userId, Long itemId, Comment comment) {
         if (itemRepository.existsItemById(itemId) && userRepository.existsUserById(userId)
@@ -34,14 +33,14 @@ public class CommentServiceImpl implements CommentService {
             List<Booking> bookings = bookingRepository.getBookingsByItemId(itemId);
             bookings.sort((o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
             Booking booking = bookings.get(0);
-        if (booking.getStatus().equals(Status.APPROVED)
+            if (booking.getStatus().equals(Status.APPROVED)
                     && booking.getStartDate().isBefore(LocalDateTime.now().withNano(0))) {
                 comment.setAuthor(userRepository.getUserById(userId));
                 comment.setItem(itemRepository.getItemById(itemId));
             } else {
                 throw new ValidationException("Владелец не подтвердил бронирование");
             }
-        return CommentMapper.toCommentShort(commentRepository.save(comment));
+            return CommentMapper.toCommentShort(commentRepository.save(comment));
         } else {
             throw new ValidationException("Пользователь не использовал предмет");
         }

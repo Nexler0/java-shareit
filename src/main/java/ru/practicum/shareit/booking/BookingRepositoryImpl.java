@@ -2,11 +2,11 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.context.annotation.Lazy;
 
-public class BookingRepositoryImpl implements BookingRepositoryCustom{
+public class BookingRepositoryImpl implements BookingRepositoryCustom {
 
-    private BookingRepository bookingRepository;
+    private final BookingRepository bookingRepository;
 
-    public BookingRepositoryImpl(@Lazy BookingRepository bookingRepository){
+    public BookingRepositoryImpl(@Lazy BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 }

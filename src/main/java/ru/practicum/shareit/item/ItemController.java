@@ -8,9 +8,9 @@ import ru.practicum.shareit.comment.model.CommentShort;
 import ru.practicum.shareit.item.dto.ItemDtoIn;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +32,8 @@ public class ItemController {
     public ItemDtoOut add(@RequestHeader("X-Sharer-User-Id") Long userId,
                           @Valid @RequestBody ItemDtoIn itemDtoIn) {
         itemDtoIn.setUserId(userId);
-        return itemMapper.toDto(itemService.addNewItem(userId, itemMapper.toItem(itemDtoIn)));
+        Item item = itemMapper.toItem(itemDtoIn);
+        return itemMapper.toDto(itemService.addNewItem(userId, item));
     }
 
     @PatchMapping("/{itemId}")
@@ -40,7 +41,8 @@ public class ItemController {
                                  @PathVariable Long itemId,
                                  @Valid @RequestBody ItemDtoIn itemDtoIn) {
         itemDtoIn.setUserId(userId);
-        return itemMapper.toDto(itemService.updateItem(userId, itemId, itemMapper.toItem(itemDtoIn)));
+        Item item = itemMapper.toItem(itemDtoIn);
+        return itemMapper.toDto(itemService.updateItem(userId, itemId, item));
     }
 
     @GetMapping("/{itemId}")

@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 @RepositoryRestResource(path = "items")
-public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositoryCustom{
+public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositoryCustom {
 
     @Query("select i from Item i where i.user.id = ?1")
     List<Item> findItemByUserId(Long userId);
@@ -23,10 +23,10 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
     List<Item> search(String item);
 
     @Modifying
-    @Query("update Item i set i.name = ?1, i.description = ?2, i.available = ?3" +
-            "where i.id = ?4")
-    void setItemInfoById(String name, String description, Boolean available,
-                         Long id);
+    @Query("update Item i set i.name = ?1, i.description = ?2, i.available = ?3, i.lastBooking = ?4, i.nextBooking = ?5" +
+            "where i.id = ?6")
+    void setItemInfoById(String name, String description, Boolean available, Long lastBooking, Long nextBooking, Long id);
+
     @Query("select (count(i) > 0) from Item i where i.id = ?1")
     Boolean existsItemById(Long id);
 

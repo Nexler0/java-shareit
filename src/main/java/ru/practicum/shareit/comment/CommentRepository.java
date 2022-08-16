@@ -8,7 +8,7 @@ import ru.practicum.shareit.comment.model.Comment;
 import java.util.List;
 
 @RepositoryRestResource(path = "comments")
-public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom{
+public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom {
 
     @Query("select c from Comment c where c.item.id = ?1")
     List<Comment> getAllByItemId(Long itemId);

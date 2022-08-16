@@ -33,19 +33,19 @@ public class BookingServiceImpl implements BookingService {
                 case "ALL":
                     return bookingRepository.findAll();
                 case "CURRENT":
-                    return bookingRepository.getAllByStartDateBeforeOrderByStartDateDesc(LocalDateTime.now())
+                    return bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now())
                             .stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
                             ).collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.getAllByEndDateBeforeOrderByStartDateDesc(LocalDateTime.now());
+                    return bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now());
                 case "FUTURE":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now());
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now());
                 case "WAITING":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
                             .filter(booking -> booking.getStatus() == Status.WAITING && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
                             .filter(booking -> booking.getStatus() == Status.REJECTED && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 default:
@@ -60,23 +60,23 @@ public class BookingServiceImpl implements BookingService {
         if (userRepository.existsUserById(userId)) {
             switch (status) {
                 case "ALL":
-                    return bookingRepository.getBookingByItemUserIdOrderByStartDateDesc(userId);
+                    return bookingRepository.getBookingsByItemUserId(userId);
                 case "CURRENT":
-                    return bookingRepository.getBookingByItemUserIdAndStartDateBeforeOrderByStartDateDesc(userId,
+                    return bookingRepository.getBookingsByItemUserIdBeforeStartDate(userId,
                             LocalDateTime.now()).stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
-                            ).collect(Collectors.toList());
+                    ).collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.getBookingByItemUserIdAndEndDateBeforeOrderByStartDateDesc(userId,
+                    return bookingRepository.getBookingsByItemUserIdBeforeEndDate(userId,
                             LocalDateTime.now());
                 case "FUTURE":
-                    return bookingRepository.getBookingByItemUserIdAndStartDateAfterOrderByStartDateDesc(userId,
+                    return bookingRepository.getBookingsByItemUserIdAfterStartDate(userId,
                             LocalDateTime.now());
                 case "WAITING":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
                             .filter(booking -> booking.getStatus() == Status.WAITING && booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllByStartDateAfterOrderByStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
                             .filter(booking -> booking.getStatus() == Status.REJECTED && booking.getItem().getUser()
                                     .getId().equals(userId)).collect(Collectors.toList());
                 default:

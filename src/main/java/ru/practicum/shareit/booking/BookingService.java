@@ -16,5 +16,4 @@ public interface BookingService {
 
     Booking approveBookingByOwner(Long userId, Long bookingId, Boolean approve);
 
-
 }

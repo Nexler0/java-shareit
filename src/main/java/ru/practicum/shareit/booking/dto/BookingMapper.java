@@ -28,7 +28,7 @@ public class BookingMapper {
 
     public Booking toBooking(BookingDtoIn bookingDtoIn) {
         if (!itemRepository.existsItemById(bookingDtoIn.getItemId())
-                || !userRepository.existsUserById(bookingDtoIn.getBookerId())){
+                || !userRepository.existsUserById(bookingDtoIn.getBookerId())) {
             throw new NotFoundException("Предмет или пользователь не создан");
         }
         Booking booking = new Booking();
@@ -41,7 +41,7 @@ public class BookingMapper {
         return booking;
     }
 
-    public static BookingShort toBookingShort(Booking booking){
+    public static BookingShort toBookingShort(Booking booking) {
         BookingShort bookingShort = new BookingShort();
         bookingShort.setId(booking.getId());
         bookingShort.setBookerId(booking.getBooker().getId());
@@ -52,7 +52,7 @@ public class BookingMapper {
         return bookingShort;
     }
 
-    public Booking toBookingFromShort(BookingShort bookingShort){
+    public Booking toBookingFromShort(BookingShort bookingShort) {
         Booking booking = new Booking();
         booking.setId(bookingShort.getId());
         booking.setBooker(userRepository.getUserById(bookingShort.getBookerId()));
