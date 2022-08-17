@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler({ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse incorrectParameter(final ValidationException e) {
-        return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));
+        return new ErrorResponse(e.getMessage(), "400");
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
     public ErrorResponse incorrectParameter(final NotFoundException e) {
-        return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));
+        return new ErrorResponse(e.getMessage(), "404");
     }
 
     @ExceptionHandler({ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT) //409
     public ErrorResponse incorrectParameter(final ConflictException e) {
-        return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));
+        return new ErrorResponse(e.getMessage(), "409");
     }
 
     @ExceptionHandler({EmptyListException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
     public ErrorResponse incorrectParameter(final RuntimeException e) {
-        return new ErrorResponse("Error", String.format("Ошибка “%s”", e.getMessage()));
+        return new ErrorResponse(e.getMessage(), "500");
     }
 
 }

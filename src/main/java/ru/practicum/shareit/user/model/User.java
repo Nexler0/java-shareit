@@ -1,18 +1,29 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.*;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Objects;
 
-@Data
+@Entity
+@Table(name = "users", schema = "public")
 @Validated
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 public class User {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "users_name")
     private String name;
+
+    @Column(name = "users_email")
     @Email
     private String email;
 

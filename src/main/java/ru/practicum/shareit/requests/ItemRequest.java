@@ -1,7 +1,29 @@
 package ru.practicum.shareit.requests;
 
-/**
- * // TODO .
- */
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "requests")
+@Validated
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class ItemRequest {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "request_description")
+    private String description;
+
+    @Column(name = "requester_id")
+    private Long requesterId;
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
@@ -8,30 +9,27 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public User addUser(User user) {
         if (user != null && isValidateCreateUser(user)) {
-            return userRepository.addUser(user);
+            return userRepository.save(user);
         }
         throw new EmptyListException("Сервера");
     }
 
     private boolean isValidateCreateUser(User user) {
-        if (user.getEmail() != null && !user.getName().isEmpty()
-                && user.getEmail() != null && !user.getEmail().isEmpty()
-                && !userRepository.getAllUsers().contains(user)) {
+        if (user.getEmail() != null && !user.getName().isEmpty() &&
+                user.getEmail() != null && !user.getEmail().isEmpty()) {
             return true;
         }
         if (user.getEmail() == null) {
@@ -41,27 +39,29 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isValidateUpdateUser(User user) {
-        if (user.getId() != 0) {
-            return !user.equals(userRepository.getUserById(user.getId()));
-        } else if (user.getId() > 0) {
-            return userRepository.getAllUsers().stream().noneMatch(user1 -> user1.equals(user));
-        } else {
-            if (userRepository.getAllUsers().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
-                throw new EmptyListException("Ошибка валидации email");
+        if (user != null) {
+            if (user.getId() != null) {
+                return userRepository.findAll().stream().noneMatch(user1 -> user1.equals(user));
             } else {
-                return true;
+                if (userRepository.findByEmailContainingIgnoreCase(user.getEmail()) != null) {
+                    throw new EmptyListException("Ошибка валидации email");
+                } else {
+                    return true;
+                }
             }
+        } else {
+            return false;
         }
     }
 
     @Override
-    public void deleteUser(int id) {
-        userRepository.deleteUser(id);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = userRepository.getAllUsers();
+        List<User> users = userRepository.findAll();
 
         if (!users.isEmpty()) {
             log.info("Запрос пользователей, в списке {}", users.size());
@@ -72,28 +72,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(int userId) {
-        User user = userRepository.getUserById(userId);
-        if (user != null) {
-            return user;
-        } else {
-            throw new NotFoundException("Пользователь не найден");
+    public User getUserById(Long userId) {
+        if (userRepository.existsUserById(userId)) {
+            return userRepository.getReferenceById(userId);
         }
+        throw new NotFoundException("Пользователь не найден");
     }
 
+    @Transactional
     @Override
-    public User updateUser(int userId, User user) {
+    public User updateUser(Long userId, User user) {
         User oldUser = getUserById(userId);
 
         if (user.getEmail() != null && !user.getEmail().isEmpty() && isValidateUpdateUser(user)) {
             oldUser.setEmail(user.getEmail());
-            userRepository.deleteUser(userId);
+        } else {
+            user.setEmail(oldUser.getEmail());
         }
-        if (user.getName() != null && !user.getName().isEmpty() && isValidateUpdateUser(user)) {
+        if (user.getName() != null && !user.getName().isEmpty()) {
             oldUser.setName(user.getName());
-            userRepository.deleteUser(userId);
+        } else {
+            user.setName(oldUser.getName());
         }
-        userRepository.addUser(oldUser);
+        userRepository.setUserInfoById(user.getName(), user.getEmail(), userId);
         return oldUser;
     }
 }

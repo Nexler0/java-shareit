@@ -5,10 +5,14 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItemDto {
-    private int id;
-    private int userId;
+public class ItemDtoIn {
+
+    private Long id;
+    private Long userId;
+    private Long requestId;
     private String name;
     private String description;
     private Boolean available;
+    private Long lastBookingId;
+    private Long nextBookingId;
 }
