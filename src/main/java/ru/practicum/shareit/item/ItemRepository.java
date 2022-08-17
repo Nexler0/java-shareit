@@ -38,5 +38,4 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
 
     @Query("select (count(i) > 0) from Item i where i.id = ?1")
     Boolean existsItemById(Long id);
-
 }
