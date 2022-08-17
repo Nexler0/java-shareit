@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS comments CASCADE;
 DROP TABLE IF EXISTS bookings_short CASCADE;
 DROP TYPE IF EXISTS status_enum CASCADE;
 
-
 CREATE TYPE status_enum AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELED');
 
 CREATE TABLE IF NOT EXISTS users
@@ -66,6 +65,5 @@ CREATE TABLE IF NOT EXISTS bookings_short
     start_date TIMESTAMP WITHOUT TIME ZONE,
     end_date   TIMESTAMP WITHOUT TIME ZONE,
     item_id    BIGINT,
-    status     status_enum,
     CONSTRAINT pk_bookings_short PRIMARY KEY (id)
 );

@@ -8,6 +8,7 @@ public class CommentMapper {
 
     public static List<CommentShort> toCommentShort(List<Comment> comments) {
         List<CommentShort> result = new ArrayList<>();
+
         for (Comment comment : comments) {
             result.add(new CommentShort(comment.getId(), comment.getItem().getId(),
                     comment.getAuthor().getName(), comment.getText(), LocalDateTime.now()));

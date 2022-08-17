@@ -50,6 +50,6 @@ public class BookingController {
     public BookingDtoOut approveBookingByOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                @RequestParam(name = "approved") Boolean approve,
                                                @PathVariable Long bookingId) {
-        return bookingMapper.toDto(bookingService.approveBookingByOwner(userId, bookingId, approve));
+        return bookingMapper.toDto(bookingService.setApproveStatusToBooking(userId, bookingId, approve));
     }
 }

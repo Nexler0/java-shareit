@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class CommentShort {
+
     private Long id;
     private Long itemId;
     private String authorName;

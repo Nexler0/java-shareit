@@ -18,8 +18,12 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     User getUserById(Long id);
 
     @Modifying
-    @Query("update User u set u.name = ?1, u.email = ?2 where u.id=?3")
-    void setUserInfoById(String name, String email, Long id);
+    @Query("update User u set u.name = ?1, " +
+            "u.email = ?2 " +
+            "where u.id=?3")
+    void setUserInfoById(String name,
+                         String email,
+                         Long id);
 
     @Query("select u from User u where u.email = ?1")
     User getByEmailEquals(String email);

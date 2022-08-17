@@ -19,6 +19,7 @@ public class BookingShort {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Long itemId;
+    @Transient
     @Enumerated(EnumType.STRING)
     private Status status;
 }

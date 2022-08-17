@@ -14,6 +14,6 @@ public interface BookingService {
 
     Booking createBooking(Long userId, Booking booking);
 
-    Booking approveBookingByOwner(Long userId, Long bookingId, Boolean approve);
+    Booking setApproveStatusToBooking(Long userId, Long bookingId, Boolean approve);
 
 }
