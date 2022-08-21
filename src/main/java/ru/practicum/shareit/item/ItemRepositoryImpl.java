@@ -9,5 +9,4 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
     public ItemRepositoryImpl(@Lazy ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
-
 }

@@ -1,12 +1,16 @@
-package ru.practicum.shareit.requests;
+package ru.practicum.shareit.requests.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.item.model.ItemShort;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "requests")
@@ -24,6 +28,12 @@ public class ItemRequest {
     @Column(name = "request_description")
     private String description;
 
-    @Column(name = "requester_id")
-    private Long requesterId;
+    @OneToOne
+    @JoinColumn(name = "requester_id")
+    private User requester;
+
+    @Transient
+    private List<ItemShort> items;
+
+    private LocalDateTime created;
 }

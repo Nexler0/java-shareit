@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.comment.model.CommentShort;
-import ru.practicum.shareit.requests.ItemRequest;
+import ru.practicum.shareit.requests.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;

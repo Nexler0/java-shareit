@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,9 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
 
     @Query("select i from Item i where i.id = ?1")
     Item getItemById(Long itemId);
+
+    @Query("select i from Item i where i.itemRequest.id = ?1")
+    Page<Item> getAllByItemRequestId(Long requestId, Pageable pageable);
 
 
     @Query("select i from Item i where lower(i.name) like lower(concat('%', ?1, '%'))" +

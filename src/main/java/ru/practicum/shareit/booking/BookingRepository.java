@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import lombok.NonNull;
+import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     @Query("select b from Booking b order by b.startDate desc")
     @NonNull
     List<Booking> findAll();
+
+    @Override
+    @Query("select b from Booking b order by b.startDate desc")
+    @NonNull
+    Page<Booking> findAll(@NonNull Pageable pageable);
 
     @Query("select b from Booking b where b.id = ?1")
     Booking getBookingById(Long bookingId);
