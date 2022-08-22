@@ -35,22 +35,22 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     @Query("select b from Booking b where b.startDate < ?1 order by b.startDate ")
     List<Booking> getAllBookingBeforeStartDate(LocalDateTime timeMoment);
 
-    @Query("select b from Booking b where b.endDate < ?1 order by b.startDate DESC")
+    @Query("select b from Booking b where b.endDate < ?1 order by b.startDate desc")
     List<Booking> getAllBookingBeforeEndDate(LocalDateTime timeMoment);
 
-    @Query("select b from Booking b where b.startDate > ?1 order by b.startDate DESC")
+    @Query("select b from Booking b where b.startDate > ?1 order by b.startDate desc")
     List<Booking> getAllBookingAfterStartDate(LocalDateTime timeMoment);
 
-    @Query("select b from Booking b where b.item.user.id = ?1 order by b.startDate DESC")
+    @Query("select b from Booking b where b.item.user.id = ?1 order by b.startDate desc")
     List<Booking> getBookingsByItemUserId(Long userId);
 
-    @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate < ?2 order by b.startDate Desc")
+    @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate < ?2 order by b.startDate desc")
     List<Booking> getBookingsByItemUserIdBeforeStartDate(Long userId, LocalDateTime now);
 
-    @Query("select b from Booking b where b.item.user.id = ?1 and b.endDate < ?2 order by b.startDate Desc")
+    @Query("select b from Booking b where b.item.user.id = ?1 and b.endDate < ?2 order by b.startDate desc")
     List<Booking> getBookingsByItemUserIdBeforeEndDate(Long userId, LocalDateTime now);
 
-    @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate > ?2 order by b.startDate Desc")
+    @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate > ?2 order by b.startDate desc")
     List<Booking> getBookingsByItemUserIdAfterStartDate(Long userId, LocalDateTime now);
 
     @Query("select b from Booking b where b.item.id = ?1")

@@ -67,9 +67,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 || requestId > itemRequestRepository.count()) {
             throw new NotFoundException("Неверные условия поиска");
         }
-        if (itemRequestRepository.getItemRequestById(requestId).getRequester().getId().equals(userId)){
-            return new ItemRequest();
-        }
         return itemRequestRepository.getItemRequestById(requestId);
     }
 }

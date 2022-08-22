@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS requests CASCADE;
 DROP TABLE IF EXISTS bookings CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
-DROP TABLE IF EXISTS bookings_short CASCADE;
 DROP TYPE IF EXISTS status_enum CASCADE;
 
 CREATE TYPE status_enum AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELED');
@@ -24,8 +23,6 @@ CREATE TABLE IF NOT EXISTS items
     items_description VARCHAR(500) NOT NULL,
     items_available   BOOLEAN,
     request_id        BIGINT,
-    last_booking_id   BIGINT,
-    next_booking_id   BIGINT,
     CONSTRAINT FK_users_id_for_items FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -57,14 +54,4 @@ CREATE TABLE IF NOT EXISTS comments
     item_id   BIGINT,
     author_id BIGINT,
     CONSTRAINT pk_comments PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS bookings_short
-(
-    id         BIGINT NOT NULL,
-    booker_id  BIGINT,
-    start_date TIMESTAMP WITHOUT TIME ZONE,
-    end_date   TIMESTAMP WITHOUT TIME ZONE,
-    item_id    BIGINT,
-    CONSTRAINT pk_bookings_short PRIMARY KEY (id)
 );

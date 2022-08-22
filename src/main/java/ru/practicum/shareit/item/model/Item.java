@@ -48,12 +48,10 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest itemRequest;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "last_booking_id")
+    @Transient
     private BookingShort lastBooking;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "next_booking_id")
+    @Transient
     private BookingShort nextBooking;
 
     @Transient

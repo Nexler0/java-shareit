@@ -29,14 +29,18 @@ public class ItemRequestMapper {
     }
 
     public ItemRequestDto toDto(ItemRequest itemRequest) {
-        ItemRequestDto result = ItemRequestDto.builder()
-                .id(itemRequest.getId())
-                .description(itemRequest.getDescription())
-                .requesterId(itemRequest.getRequester().getId())
-                .created(itemRequest.getCreated())
-                .build();
-        result.setItems(itemRepository.getAllByItemRequestId(itemRequest.getId(), PageRequest.of(0, 100))
-                .stream().map(itemMapper::toShort).collect(Collectors.toList()));
-        return result;
+        if (itemRequest != null) {
+            ItemRequestDto result = ItemRequestDto.builder()
+                    .id(itemRequest.getId())
+                    .description(itemRequest.getDescription())
+                    .requesterId(itemRequest.getRequester().getId())
+                    .created(itemRequest.getCreated())
+                    .build();
+            result.setItems(itemRepository.getAllByItemRequestId(itemRequest.getId(), PageRequest.of(0, 100))
+                    .stream().map(itemMapper::toShort).collect(Collectors.toList()));
+            return result;
+        } else {
+            return ItemRequestDto.builder().build();
+        }
     }
 }
