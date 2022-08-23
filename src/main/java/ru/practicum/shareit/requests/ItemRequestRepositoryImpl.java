@@ -2,7 +2,7 @@ package ru.practicum.shareit.requests;
 
 import org.springframework.context.annotation.Lazy;
 
-public class ItemRequestRepositoryImpl implements ItemRequestRepositoryCustom{
+public class ItemRequestRepositoryImpl implements ItemRequestRepositoryCustom {
 
     private final ItemRequestRepository itemRequestRepository;
 

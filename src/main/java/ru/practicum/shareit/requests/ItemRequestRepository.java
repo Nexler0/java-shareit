@@ -16,7 +16,7 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long>,
     @Override
     @Query("select i from ItemRequest i order by i.created desc")
     @NonNull
-    Page<ItemRequest> findAll (@NonNull Pageable pageable);
+    Page<ItemRequest> findAll(@NonNull Pageable pageable);
 
     @Query("select i from ItemRequest i where i.id = ?1")
     ItemRequest getItemRequestById(Long requestId);

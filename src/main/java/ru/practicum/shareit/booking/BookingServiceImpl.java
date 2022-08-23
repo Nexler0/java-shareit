@@ -101,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void isValidBooking(Long userId, Booking booking){
+    private void isValidBooking(Long userId, Booking booking) {
         LocalDateTime now = LocalDateTime.now().withNano(0);
 
         if (booking.getStartDate().isBefore(now) || booking.getEndDate().isBefore(now)) {

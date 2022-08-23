@@ -47,7 +47,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void saveuserTest() throws Exception {
+    void saveUserTest() throws Exception {
         when(userService.addUser(any()))
                 .thenReturn(user);
 
