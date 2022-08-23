@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -27,25 +28,31 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public List<Booking> findAllBooking(Long userId, String status) {
+    public List<Booking> findAllBooking(Long userId, String status, int from, int size) {
+        verifyPageConfig(from, size);
         if (userRepository.existsUserById(userId)) {
             switch (status) {
                 case "ALL":
-                    return bookingRepository.findAll();
+                    return bookingRepository.findAll(PageRequest.of(from, size)).toList();
                 case "CURRENT":
-                    return bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now())
-                            .stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
-                            ).collect(Collectors.toList());
+                    return bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now(),
+                                    PageRequest.of(from, size))
+                            .stream().filter(booking -> booking.getStatus().equals(Status.REJECTED))
+                            .collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now());
+                    return bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now(),
+                            PageRequest.of(from, size)).toList();
                 case "FUTURE":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now());
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                            PageRequest.of(from, size)).toList();
                 case "WAITING":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                                    PageRequest.of(from, size)).stream()
                             .filter(booking -> booking.getStatus() == Status.WAITING && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                                    PageRequest.of(from, size)).stream()
                             .filter(booking -> booking.getStatus() == Status.REJECTED && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 default:
@@ -55,28 +62,38 @@ public class BookingServiceImpl implements BookingService {
         throw new NotFoundException("Пользователь не найден");
     }
 
+    private void verifyPageConfig(int from, int size) {
+        if (from < 0 || size <= 0) {
+            throw new ValidationException("Неверные параметры страницы");
+        }
+    }
+
     @Override
-    public List<Booking> findAllUserBooking(Long userId, String status) {
+    public List<Booking> findAllUserBooking(Long userId, String status, int from, int size) {
+        verifyPageConfig(from, size);
         if (userRepository.existsUserById(userId)) {
             switch (status) {
                 case "ALL":
-                    return bookingRepository.getBookingsByItemUserId(userId);
+                    return bookingRepository.getBookingsByItemUserId(userId, PageRequest.of(from, size)).toList();
                 case "CURRENT":
-                    return bookingRepository.getBookingsByItemUserIdBeforeStartDate(userId,
-                            LocalDateTime.now()).stream().filter(booking -> booking.getStatus().equals(Status.REJECTED)
-                    ).collect(Collectors.toList());
+                    return bookingRepository.getBookingsByItemUserIdBeforeStartDate(userId, LocalDateTime.now(),
+                                    PageRequest.of(from, size)).stream()
+                            .filter(booking -> booking.getStatus().equals(Status.REJECTED))
+                            .collect(Collectors.toList());
                 case "PAST":
                     return bookingRepository.getBookingsByItemUserIdBeforeEndDate(userId,
-                            LocalDateTime.now());
+                            LocalDateTime.now(), PageRequest.of(from, size)).toList();
                 case "FUTURE":
                     return bookingRepository.getBookingsByItemUserIdAfterStartDate(userId,
-                            LocalDateTime.now());
+                            LocalDateTime.now(), PageRequest.of(from, size)).toList();
                 case "WAITING":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                                    PageRequest.of(from, size)).stream()
                             .filter(booking -> booking.getStatus() == Status.WAITING && booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now()).stream()
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                                    PageRequest.of(from, size)).stream()
                             .filter(booking -> booking.getStatus() == Status.REJECTED && booking.getItem().getUser()
                                     .getId().equals(userId)).collect(Collectors.toList());
                 default:

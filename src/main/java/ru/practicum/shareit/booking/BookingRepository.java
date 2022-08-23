@@ -33,25 +33,25 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     void setBookingInfoById(Status status, Long id);
 
     @Query("select b from Booking b where b.startDate < ?1 order by b.startDate ")
-    List<Booking> getAllBookingBeforeStartDate(LocalDateTime timeMoment);
+    Page<Booking> getAllBookingBeforeStartDate(LocalDateTime timeMoment, Pageable pageable);
 
     @Query("select b from Booking b where b.endDate < ?1 order by b.startDate desc")
-    List<Booking> getAllBookingBeforeEndDate(LocalDateTime timeMoment);
+    Page<Booking> getAllBookingBeforeEndDate(LocalDateTime timeMoment, Pageable pageable);
 
     @Query("select b from Booking b where b.startDate > ?1 order by b.startDate desc")
-    List<Booking> getAllBookingAfterStartDate(LocalDateTime timeMoment);
+    Page<Booking> getAllBookingAfterStartDate(LocalDateTime timeMoment, Pageable pageable);
 
     @Query("select b from Booking b where b.item.user.id = ?1 order by b.startDate desc")
-    List<Booking> getBookingsByItemUserId(Long userId);
+    Page<Booking> getBookingsByItemUserId(Long userId, Pageable pageable);
 
     @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate < ?2 order by b.startDate desc")
-    List<Booking> getBookingsByItemUserIdBeforeStartDate(Long userId, LocalDateTime now);
+    Page<Booking> getBookingsByItemUserIdBeforeStartDate(Long userId, LocalDateTime now, Pageable pageable);
 
     @Query("select b from Booking b where b.item.user.id = ?1 and b.endDate < ?2 order by b.startDate desc")
-    List<Booking> getBookingsByItemUserIdBeforeEndDate(Long userId, LocalDateTime now);
+    Page<Booking> getBookingsByItemUserIdBeforeEndDate(Long userId, LocalDateTime now, Pageable pageable);
 
     @Query("select b from Booking b where b.item.user.id = ?1 and b.startDate > ?2 order by b.startDate desc")
-    List<Booking> getBookingsByItemUserIdAfterStartDate(Long userId, LocalDateTime now);
+    Page<Booking> getBookingsByItemUserIdAfterStartDate(Long userId, LocalDateTime now, Pageable pageable);
 
     @Query("select b from Booking b where b.item.id = ?1")
     List<Booking> getBookingsByItemId(Long id);
