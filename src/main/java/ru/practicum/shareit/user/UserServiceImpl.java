@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
         if (user != null && isValidateCreateUser(user)) {
             return userRepository.save(user);
         }
-        throw new EmptyListException("Сервера");
+        throw new EmptyListException("Ошибка сервера");
     }
 
     private boolean isValidateCreateUser(User user) {
