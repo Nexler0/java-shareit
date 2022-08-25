@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +14,6 @@ import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.requests.dto.ItemRequestMapper;
 import ru.practicum.shareit.requests.model.ItemRequest;
-import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
@@ -33,8 +33,9 @@ public class ItemRequestControllerTest {
     private ItemRequestService itemRequestService;
     @MockBean
     private ItemRequestMapper itemRequestMapper;
-    @MockBean
-    private UserService userService;
+
+    @InjectMocks
+    private ItemRequestController itemRequestController;
 
     @Autowired
     private MockMvc mockMvc;
