@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.requests.dto.ItemRequestMapper;
 import ru.practicum.shareit.requests.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -23,7 +22,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
-    private final ItemRequestMapper itemRequestMapper;
 
     @Override
     public ItemRequest addRequestFromUser(Long userId, ItemRequest itemRequest) {

@@ -30,17 +30,16 @@ public class ItemRequestMapper {
 
     public ItemRequestDto toDto(ItemRequest itemRequest) {
         if (itemRequest != null) {
-            ItemRequestDto result = ItemRequestDto.builder()
-                    .id(itemRequest.getId())
-                    .description(itemRequest.getDescription())
-                    .requesterId(itemRequest.getRequester().getId())
-                    .created(itemRequest.getCreated())
-                    .build();
+            ItemRequestDto result = new ItemRequestDto();
+                    result.setId(itemRequest.getId());
+                    result.setDescription(itemRequest.getDescription());
+                    result.setRequesterId(itemRequest.getRequester().getId());
+                    result.setCreated(itemRequest.getCreated());
             result.setItems(itemRepository.getAllByItemRequestId(itemRequest.getId(), PageRequest.of(0, 100))
                     .stream().map(itemMapper::toShort).collect(Collectors.toList()));
             return result;
         } else {
-            return ItemRequestDto.builder().build();
+            return new ItemRequestDto();
         }
     }
 }
