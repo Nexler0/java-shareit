@@ -39,7 +39,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequest> getAllRequestsByOwner(Long userId) {
         if (!userRepository.existsUserById(userId)) {
-            throw new NotFoundException("Пользовательно не найден");
+            throw new NotFoundException("Пользователь не найден");
         }
         return itemRequestRepository.findItemRequestByRequesterId(userId);
 

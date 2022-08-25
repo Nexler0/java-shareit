@@ -95,6 +95,6 @@ public class UserServiceImpl implements UserService {
             user.setName(oldUser.getName());
         }
         userRepository.setUserInfoById(user.getName(), user.getEmail(), userId);
-        return oldUser;
+        return userRepository.getUserById(userId);
     }
 }

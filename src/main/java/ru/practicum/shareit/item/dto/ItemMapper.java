@@ -90,7 +90,9 @@ public class ItemMapper {
         result.setDescription(item.getDescription());
         result.setOwnerId(item.getUser().getId());
         result.setAvailable(item.getAvailable());
-        result.setRequestId(item.getItemRequest().getId());
+        if (item.getItemRequest() != null) {
+            result.setRequestId(item.getItemRequest().getId());
+        }
         return result;
     }
 }
