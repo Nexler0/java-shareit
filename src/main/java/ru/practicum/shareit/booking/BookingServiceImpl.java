@@ -28,7 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public List<Booking> findAllBooking(Long userId, String status, int from, int size) {
+    public List<Booking> findAllBooking(Long userId, String status, Integer from, Integer size) {
         verifyPageConfig(from, size);
         if (userRepository.existsUserById(userId)) {
             switch (status) {
@@ -62,14 +62,14 @@ public class BookingServiceImpl implements BookingService {
         throw new NotFoundException("Пользователь не найден");
     }
 
-    private void verifyPageConfig(int from, int size) {
+    private void verifyPageConfig(Integer from, Integer size) {
         if (from < 0 || size <= 0) {
             throw new ValidationException("Неверные параметры страницы");
         }
     }
 
     @Override
-    public List<Booking> findAllUserBooking(Long userId, String status, int from, int size) {
+    public List<Booking> findAllUserBooking(Long userId, String status, Integer from, Integer size) {
         verifyPageConfig(from, size);
         if (userRepository.existsUserById(userId)) {
             switch (status) {

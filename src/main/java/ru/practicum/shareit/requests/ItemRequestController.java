@@ -27,9 +27,9 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                @RequestParam(name = "from", defaultValue = "0",
-                                                       required = false) int from,
+                                                       required = false) Integer from,
                                                @RequestParam(name = "size", defaultValue = "10",
-                                                       required = false) int size) {
+                                                       required = false) Integer size) {
 
         return itemRequestService.getAllRequests(userId, from, size).stream().map(itemRequestMapper::toDto)
                 .collect(Collectors.toList());
@@ -45,9 +45,9 @@ public class ItemRequestController {
     public ItemRequestDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable Long requestId,
                                              @RequestParam(name = "from", defaultValue = "0",
-                                             required = false) int from,
+                                             required = false) Integer from,
                                              @RequestParam(name = "size", defaultValue = "10",
-                                             required = false) int size) {
+                                             required = false) Integer size) {
         return itemRequestMapper.toDto(itemRequestService.getItemRequestsById(userId, requestId));
     }
 }

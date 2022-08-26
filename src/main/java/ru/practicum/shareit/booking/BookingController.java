@@ -22,9 +22,9 @@ public class BookingController {
     public List<BookingDtoOut> getAllBooking(@RequestParam(name = "state", defaultValue = "ALL") String status,
                                              @RequestHeader("X-Sharer-User-Id") Long userId,
                                              @RequestParam(name = "from", defaultValue = "0",
-                                                     required = false) int from,
+                                                     required = false) Integer from,
                                              @RequestParam(name = "size", defaultValue = "10",
-                                                     required = false) int size) {
+                                                     required = false) Integer size) {
         return bookingService.findAllBooking(userId, status, from, size).stream().map(bookingMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -33,9 +33,9 @@ public class BookingController {
     public List<BookingDtoOut> getAllOwnerBooking(@RequestParam(name = "state", defaultValue = "ALL") String status,
                                                   @RequestHeader("X-Sharer-User-Id") Long userId,
                                                   @RequestParam(name = "from", defaultValue = "0",
-                                                          required = false) int from,
+                                                          required = false) Integer from,
                                                   @RequestParam(name = "size", defaultValue = "10",
-                                                          required = false) int size) {
+                                                          required = false) Integer size) {
         return bookingService.findAllUserBooking(userId, status, from, size).stream().map(bookingMapper::toDto)
                 .collect(Collectors.toList());
     }

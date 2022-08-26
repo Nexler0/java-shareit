@@ -46,7 +46,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequest> getAllRequests(Long userId, int from, int size) {
+    public List<ItemRequest> getAllRequests(Long userId, Integer from, Integer size) {
         if (from < 0 || size <= 0) {
             throw new ValidationException("Параметр from или size задан неверно");
         }

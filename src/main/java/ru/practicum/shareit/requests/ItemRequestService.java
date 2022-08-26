@@ -10,7 +10,7 @@ public interface ItemRequestService {
 
     List<ItemRequest> getAllRequestsByOwner(Long userId);
 
-    List<ItemRequest> getAllRequests(Long userId, int from, int size);
+    List<ItemRequest> getAllRequests(Long userId, Integer from, Integer size);
 
     ItemRequest getItemRequestsById(Long userId, Long requestId);
 }
