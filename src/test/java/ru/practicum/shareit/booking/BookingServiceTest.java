@@ -86,6 +86,31 @@ public class BookingServiceTest {
     }
 
     @Test
+    void createBookingWrongTimeTest() {
+        booking.setStartDate(LocalDateTime.now().minusDays(2));
+
+        Throwable throwable = assertThrows(ValidationException.class,
+                () -> bookingService.createBooking(user2.getId(), booking));
+        assertThat(throwable.getMessage(), is("Временной диапазон задан неверно"));
+    }
+
+    @Test
+    void createBookingByItemOwnerTest() {
+        booking.setBooker(user);
+
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.createBooking(user.getId(), booking));
+        assertThat(throwable.getMessage(), is("Владелец не может арендовать у себя предмет"));
+    }
+
+    @Test
+    void createBookingByNotExistUserTest() {
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.createBooking(10L, booking));
+        assertThat(throwable.getMessage(), is("Пользователь не создан"));
+    }
+
+    @Test
     void createBookingNotAvailableItemTest() {
         item.setAvailable(false);
         itemService.updateItem(user.getId(), item.getId(), item);
@@ -126,6 +151,35 @@ public class BookingServiceTest {
         Throwable throwable = assertThrows(ValidationException.class,
                 () -> bookingService.setApproveStatusToBooking(user.getId(), booking.getId(), true));
         assertThat(throwable.getMessage(), is("Уже подтверждено"));
+    }
+
+    @Test
+    void findAllBookingWrongStatusTest() {
+        Throwable throwable = assertThrows(ValidationException.class,
+                () -> bookingService.findAllBooking(user.getId(), "ALG", 0, 10));
+        assertThat(throwable.getMessage(), is("Unknown state: ALG"));
+    }
+
+    @Test
+    void findAllBookingNotExistUserTest() {
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.findAllBooking(10L, "ALL", 0, 10));
+        assertThat(throwable.getMessage(), is("Пользователь не найден"));
+    }
+
+    @Test
+    void findBookingByWrongUserIdTest() {
+        bookingService.createBooking(user2.getId(), booking);
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.findBookingById(10L, booking.getId()));
+        assertThat(throwable.getMessage(), is("Владельцем бронирования пользователь не является"));
+    }
+
+    @Test
+    void findBookingByIdNotCreatedTest() {
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.findBookingById(user2.getId(), booking.getId()));
+        assertThat(throwable.getMessage(), is("Бронирование не создано"));
     }
 
     @Test

@@ -45,9 +45,4 @@ public class ItemRequest {
         ItemRequest that = (ItemRequest) o;
         return Objects.equals(description, that.description) && Objects.equals(requester, that.requester) && Objects.equals(items, that.items) && Objects.equals(created, that.created);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, requester, items, created);
-    }
 }

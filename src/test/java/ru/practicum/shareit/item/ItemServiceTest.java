@@ -9,6 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.exception.AccessException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
@@ -100,9 +101,23 @@ public class ItemServiceTest {
     }
 
     @Test
+    void deleteItemByNotOwnerTest() {
+        itemService.addNewItem(user.getId(), item);
+        Throwable throwable = assertThrows(AccessException.class,
+                () -> itemService.deleteItem(2L, item.getId()));
+        assertThat(throwable.getMessage(), is("Доступ запрещен"));
+    }
+
+    @Test
     void findItemByRequestTest() {
         itemService.addNewItem(user.getId(), item);
         assertThat(itemService.findItemByRequest("screw"), equalTo(List.of(item)));
+    }
+
+    @Test
+    void findItemByEmptyRequestTest() {
+        itemService.addNewItem(user.getId(), item);
+        assertThat(itemService.findItemByRequest(""), equalTo(List.of()));
     }
 
     @Test

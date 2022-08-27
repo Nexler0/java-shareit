@@ -11,6 +11,7 @@ import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.EmptyListException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
@@ -31,12 +32,14 @@ public class UserServiceImplTest {
     private final EntityManager em;
     private final UserService userService;
 
+
     @Test
     void addValidUserTest() {
         User user = new User();
         user.setEmail("user@123.ru");
         user.setName("Jef");
         User user1 = userService.addUser(user);
+        UserMapper.toDto(user);
         TypedQuery<User> query = em.createQuery("Select u from User u where u.id = :id", User.class);
         User checkUser = query.setParameter("id", user1.getId()).getSingleResult();
         assertThat(checkUser.getId(), equalTo(user.getId()));
@@ -98,6 +101,17 @@ public class UserServiceImplTest {
         user = new User(1L, "UpdateJef", "UpdateJef@mail.ru");
         userService.updateUser(1L, user);
         assertThat(userService.getUserById(1L), equalTo(user));
+    }
+
+    @Test
+    void updateUserWrongEmailTest() {
+        User user = new User(null, "Jef", "Jef@mail.ru");
+        userService.addUser(user);
+        User user1 = new User(null, "UpdateJef", "@mail.ru");
+        Throwable throwable = assertThrows(EmptyListException.class,
+                () -> userService.updateUser(1L, user1));
+        assertThat(throwable.getMessage(), is("Ошибка валидации email"));
+
     }
 
     @Test

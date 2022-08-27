@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "public")
@@ -34,10 +33,5 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return name.equals(user.name) && email.equals(user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, email);
     }
 }

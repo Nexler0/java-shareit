@@ -42,11 +42,8 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(text, comment.text) && Objects.equals(item, comment.item) && Objects.equals(author, comment.author);
+        return Objects.equals(text, comment.text) && Objects.equals(item, comment.item)
+                && Objects.equals(author, comment.author);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(text, item, author);
-    }
 }

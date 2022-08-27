@@ -53,8 +53,4 @@ public class Booking {
                 && status == booking.status && Objects.equals(approved, booking.approved);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(startDate, endDate, item, booker, status, approved);
-    }
 }
