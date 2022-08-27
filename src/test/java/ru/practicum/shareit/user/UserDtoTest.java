@@ -29,6 +29,8 @@ public class UserDtoTest {
 
     @Test
     void serializeTest() throws IOException {
+        System.out.println(user.equals(new User(1L, "Harri", "Harri@mail.ru")));
+        System.out.println(user.hashCode());
         JsonContent<UserDto> userJson = this.json.write(UserMapper.toDto(user));
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"name\":\"Harri\",\"email\":\"Harri@mail.ru\"}"));

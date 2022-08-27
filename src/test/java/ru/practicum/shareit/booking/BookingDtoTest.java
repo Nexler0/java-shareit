@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -43,6 +44,20 @@ public class BookingDtoTest {
 
     @Test
     void serializeTest() throws IOException {
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setBooker(new User(1L, "user", "user@mail.ru"));
+        booking.setStartDate(LocalDateTime.now().withNano(0));
+        booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
+        booking.setStatus(Status.APPROVED);
+        Booking booking2 = new Booking();
+        booking2.setId(1L);
+        booking2.setBooker(new User(1L, "user", "user@mail.ru"));
+        booking2.setStartDate(LocalDateTime.now().withNano(0));
+        booking2.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
+        booking2.setStatus(Status.APPROVED);
+        System.out.println(booking.equals(booking2));
+        System.out.println(booking.hashCode());
         JsonContent<BookingDtoOut> userJson = this.json.write(bookingDtoOut);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"start\":\"" + LocalDateTime.now().withNano(0) + "\",\"end\":\""

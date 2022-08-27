@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
+import ru.practicum.shareit.requests.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,6 +34,18 @@ public class ItemRequestDtoTest {
 
     @Test
     void serializeTest() throws IOException {
+        ItemRequest itemRequest1 = new ItemRequest();
+        itemRequest1.setId(1L);
+        itemRequest1.setRequester(new User(1L, "User", "User@mail.ru"));
+        itemRequest1.setDescription("Need something");
+        itemRequest1.setCreated(LocalDateTime.now().withNano(0));
+        ItemRequest itemRequest2 = new ItemRequest();
+        itemRequest2.setId(1L);
+        itemRequest2.setRequester(new User(1L, "User", "User@mail.ru"));
+        itemRequest2.setDescription("Need something");
+        itemRequest2.setCreated(LocalDateTime.now().withNano(0));
+        System.out.println(itemRequest1.equals(itemRequest2));
+        System.out.println(itemRequest1.hashCode());
         JsonContent<ItemRequestDto> userJson = this.json.write(itemRequest);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"description\":\"Need something\",\"requesterId\":1," +

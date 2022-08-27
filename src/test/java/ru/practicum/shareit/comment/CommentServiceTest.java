@@ -79,7 +79,7 @@ public class CommentServiceTest {
     void addNewCommentTest() {
         bookingService.setApproveStatusToBooking(user.getId(), booking.getId(), true);
         commentService.addComment(user2.getId(), item.getId(), comment);
-
+        System.out.println(comment.hashCode());
         TypedQuery<Comment> query = em.createQuery("select i from Comment i where i.id = :id", Comment.class);
         Comment check = query.setParameter("id", comment.getId()).getSingleResult();
         assertThat(check, equalTo(comment));
