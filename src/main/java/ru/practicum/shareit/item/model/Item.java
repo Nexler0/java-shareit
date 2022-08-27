@@ -68,4 +68,9 @@ public class Item {
                 && name.equals(item.name)
                 && description.equals(item.description);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, name, description, available, itemRequest, lastBooking, nextBooking, comments);
+    }
 }
