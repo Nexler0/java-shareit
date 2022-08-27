@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.booking.BookingService;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.comment.CommentService;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.model.CommentMapper;
+import ru.practicum.shareit.comment.model.CommentShort;
 import ru.practicum.shareit.item.dto.ItemDtoIn;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,6 +42,10 @@ public class ItemControllerTest {
     @Autowired
     private UserService userService;
     @Autowired
+    private CommentService commentService;
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
     private MockMvc mockMvc;
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -39,15 +53,16 @@ public class ItemControllerTest {
     private Item item;
     private ItemDtoIn itemDtoIn;
     private User user;
+    private User user2;
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(1L);
-        user.setEmail("user@123.ru");
-        user.setName("Jef");
+        mapper.registerModule(new JavaTimeModule());
+
+        user = new User(1L, "Jef", "user@123.ru");
         userService.addUser(user);
-        userService.addUser(new User(null, "Jass", "Jass@mail.ru"));
+        user2 = new User(2L, "Jass", "Jass@mail.ru");
+        userService.addUser(user2);
 
         item = new Item();
         item.setId(1L);
@@ -163,12 +178,39 @@ public class ItemControllerTest {
     }
 
     @Test
-    void postCommentToItemTest() throws Exception{
-        //TODO
+    void postCommentToItemTest() {
+
+        itemService.addNewItem(user.getId(), item);
+        Booking booking = new Booking();
+        booking.setBooker(user2);
+        booking.setItem(item);
+        booking.setStartDate(LocalDateTime.now().withNano(0));
+        booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
+        bookingService.createBooking(user2.getId(), booking);
+        Comment comment = new Comment();
+        comment.setItem(item);
+        comment.setAuthor(user2);
+        comment.setText("Nice screw");
+        bookingService.setApproveStatusToBooking(1L, 1L, true);
+        CommentShort checkComment = commentService.addComment(user2.getId(), item.getId(), comment);
+        assertThat(checkComment, equalTo(CommentMapper.toCommentShort(comment)));
     }
 
     @Test
-    void findItemByRequestTest(){
-        //TODO
+    void findItemByRequestTest() throws Exception {
+        itemService.addNewItem(user.getId(), item);
+
+        mockMvc.perform(get("/items/{id}", item.getId())
+                        .header("X-Sharer-User-Id", 1L)
+                        .param("text", "screw")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id", is(item.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(item.getName())))
+                .andExpect(jsonPath("$.description", is(item.getDescription())))
+                .andExpect(jsonPath("$.available", is(true)));
     }
 }

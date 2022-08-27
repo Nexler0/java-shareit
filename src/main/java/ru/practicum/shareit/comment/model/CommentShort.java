@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -16,4 +17,17 @@ public class CommentShort {
     private String authorName;
     private String text;
     private LocalDateTime created;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommentShort that = (CommentShort) o;
+        return Objects.equals(itemId, that.itemId) && Objects.equals(authorName, that.authorName) && Objects.equals(text, that.text) && Objects.equals(created, that.created);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, authorName, text, created);
+    }
 }

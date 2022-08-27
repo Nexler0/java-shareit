@@ -13,7 +13,6 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,8 +32,7 @@ public class CommentServiceImpl implements CommentService {
             List<Booking> bookings = bookingRepository.getBookingsByItemId(itemId);
             bookings.sort((o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
             Booking booking = bookings.get(0);
-            if (booking.getStatus().equals(Status.APPROVED)
-                    && booking.getStartDate().isBefore(LocalDateTime.now().withNano(0))) {
+            if (booking.getStatus().equals(Status.APPROVED)) {
                 comment.setAuthor(userRepository.getUserById(userId));
                 comment.setItem(itemRepository.getItemById(itemId));
             } else {

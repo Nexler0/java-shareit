@@ -44,18 +44,18 @@ public class ItemRequestRepositoryTest {
     }
 
     @Test
-    void findAllItemRequestTest(){
+    void findAllItemRequestTest() {
         assertThat(List.of(itemRequest).get(0), equalTo(itemRequestRepository
-                .findAll(PageRequest.of(0,10)).toList().get(0)));
+                .findAll(PageRequest.of(0, 10)).toList().get(0)));
     }
 
     @Test
-    void getItemRequestByIdTest(){
+    void getItemRequestByIdTest() {
         assertThat(itemRequest, equalTo(itemRequestRepository.getItemRequestById(itemRequest.getId())));
     }
 
     @Test
-    void findItemRequestByRequesterIdTest(){
+    void findItemRequestByRequesterIdTest() {
         assertThat(List.of(itemRequest), equalTo(itemRequestRepository
                 .findItemRequestByRequesterId(user.getId())));
     }

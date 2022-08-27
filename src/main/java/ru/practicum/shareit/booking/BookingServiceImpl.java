@@ -35,25 +35,25 @@ public class BookingServiceImpl implements BookingService {
                 case "ALL":
                     return bookingRepository.findAll(PageRequest.of(from, size)).toList();
                 case "CURRENT":
-                    return bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now().withNano(0),
                                     PageRequest.of(from, size))
                             .stream().filter(booking -> booking.getStatus().equals(Status.REJECTED))
                             .collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now().withNano(0),
                             PageRequest.of(from, size)).toList();
                 case "FUTURE":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                             PageRequest.of(from, size)).toList();
                 case "WAITING":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                                     PageRequest.of(from, size)).stream()
-                            .filter(booking -> booking.getStatus() == Status.WAITING && !booking.getItem()
+                            .filter(booking -> booking.getStatus().equals(Status.WAITING) && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                                     PageRequest.of(from, size)).stream()
-                            .filter(booking -> booking.getStatus() == Status.REJECTED && !booking.getItem()
+                            .filter(booking -> booking.getStatus().equals(Status.REJECTED) && !booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 default:
                     throw new ValidationException("Unknown state: " + status);
@@ -76,25 +76,25 @@ public class BookingServiceImpl implements BookingService {
                 case "ALL":
                     return bookingRepository.getBookingsByItemUserId(userId, PageRequest.of(from, size)).toList();
                 case "CURRENT":
-                    return bookingRepository.getBookingsByItemUserIdBeforeStartDate(userId, LocalDateTime.now(),
-                                    PageRequest.of(from, size)).stream()
+                    return bookingRepository.getBookingsByItemUserIdBeforeStartDate(userId,
+                                    LocalDateTime.now().withNano(0), PageRequest.of(from, size)).stream()
                             .filter(booking -> booking.getStatus().equals(Status.REJECTED))
                             .collect(Collectors.toList());
                 case "PAST":
                     return bookingRepository.getBookingsByItemUserIdBeforeEndDate(userId,
-                            LocalDateTime.now(), PageRequest.of(from, size)).toList();
+                            LocalDateTime.now().withNano(0), PageRequest.of(from, size)).toList();
                 case "FUTURE":
                     return bookingRepository.getBookingsByItemUserIdAfterStartDate(userId,
-                            LocalDateTime.now(), PageRequest.of(from, size)).toList();
+                            LocalDateTime.now().withNano(0), PageRequest.of(from, size)).toList();
                 case "WAITING":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                                     PageRequest.of(from, size)).stream()
-                            .filter(booking -> booking.getStatus() == Status.WAITING && booking.getItem()
+                            .filter(booking -> booking.getStatus().equals(Status.WAITING) && booking.getItem()
                                     .getUser().getId().equals(userId)).collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+                    return bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                                     PageRequest.of(from, size)).stream()
-                            .filter(booking -> booking.getStatus() == Status.REJECTED && booking.getItem().getUser()
+                            .filter(booking -> booking.getStatus().equals(Status.REJECTED) && booking.getItem().getUser()
                                     .getId().equals(userId)).collect(Collectors.toList());
                 default:
                     throw new ValidationException("Unknown state: " + status);
@@ -138,7 +138,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public Booking createBooking(Long userId, Booking booking) {
-        isValidBooking(userId, booking);
+
         if (booking.getStatus() == null) {
             booking.setStatus(Status.WAITING);
         }
@@ -146,6 +146,7 @@ public class BookingServiceImpl implements BookingService {
         Booking bookingSaved;
 
         if (item != null) {
+            isValidBooking(userId, booking);
             if (item.getAvailable()) {
                 bookingSaved = bookingRepository.save(booking);
                 if (item.getNextBooking() == null) {
@@ -182,5 +183,10 @@ public class BookingServiceImpl implements BookingService {
             return booking;
         }
         throw new NotFoundException("Пользователь не является владельцем предмета");
+    }
+
+    @Override
+    public List<Booking> findBookings() {
+        return bookingRepository.findAll();
     }
 }

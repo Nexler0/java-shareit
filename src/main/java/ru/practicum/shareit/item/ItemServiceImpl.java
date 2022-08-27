@@ -34,7 +34,7 @@ class ItemServiceImpl implements ItemService {
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
             return itemRepository.save(item);
         } else if (!userRepository.existsUserById(userId)) {
-            throw new NotFoundException("пользователь не найден");
+            throw new NotFoundException("Пользователь не найден");
         } else if (item.getAvailable() == null
                 || item.getName() == null || item.getName().isEmpty()
                 || item.getDescription() == null || item.getDescription().isEmpty()) {

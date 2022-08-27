@@ -55,9 +55,9 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDtoOut approveBookingByOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                               @RequestParam(name = "approved") Boolean approve,
-                                               @PathVariable Long bookingId) {
+    public BookingDtoOut setApproveBookingByOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @RequestParam(name = "approved") Boolean approve,
+                                                  @PathVariable Long bookingId) {
         return bookingMapper.toDto(bookingService.setApproveStatusToBooking(userId, bookingId, approve));
     }
 }

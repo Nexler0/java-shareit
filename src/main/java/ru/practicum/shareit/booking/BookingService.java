@@ -16,4 +16,5 @@ public interface BookingService {
 
     Booking setApproveStatusToBooking(Long userId, Long bookingId, Boolean approve);
 
+    List<Booking> findBookings();
 }
