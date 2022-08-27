@@ -83,19 +83,19 @@ public class BookingRepositoryTest {
 
     @Test
     void getAllBookingBeforeStartDateTest() {
-        assertThat(bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now(),
+        assertThat(bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of(booking)));
     }
 
     @Test
     void getAllBookingBeforeEndDateTest() {
-        assertThat(bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now(),
+        assertThat(bookingRepository.getAllBookingBeforeEndDate(LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 
     @Test
     void getAllBookingAfterStartDateTest() {
-        assertThat(bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now(),
+        assertThat(bookingRepository.getAllBookingAfterStartDate(LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 
@@ -107,19 +107,19 @@ public class BookingRepositoryTest {
 
     @Test
     void getBookingsByItemUserIdBeforeStartDateTest() {
-        assertThat(bookingRepository.getBookingsByItemUserIdBeforeStartDate(1L, LocalDateTime.now(),
+        assertThat(bookingRepository.getBookingsByItemUserIdBeforeStartDate(1L, LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of(booking)));
     }
 
     @Test
     void getBookingsByItemUserIdBeforeEndDateTest() {
-        assertThat(bookingRepository.getBookingsByItemUserIdBeforeEndDate(1L, LocalDateTime.now(),
+        assertThat(bookingRepository.getBookingsByItemUserIdBeforeEndDate(1L, LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 
     @Test
     void getBookingsByItemUserIdAfterStartDateTest() {
-        assertThat(bookingRepository.getBookingsByItemUserIdAfterStartDate(1L, LocalDateTime.now(),
+        assertThat(bookingRepository.getBookingsByItemUserIdAfterStartDate(1L, LocalDateTime.now().withNano(0),
                 PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 

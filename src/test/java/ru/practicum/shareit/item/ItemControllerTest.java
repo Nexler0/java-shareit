@@ -46,6 +46,8 @@ public class ItemControllerTest {
     @Autowired
     private BookingService bookingService;
     @Autowired
+    private CommentMapper commentMapper;
+    @Autowired
     private MockMvc mockMvc;
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -193,7 +195,8 @@ public class ItemControllerTest {
         comment.setText("Nice screw");
         bookingService.setApproveStatusToBooking(1L, 1L, true);
         CommentShort checkComment = commentService.addComment(user2.getId(), item.getId(), comment);
-        assertThat(checkComment, equalTo(CommentMapper.toCommentShort(comment)));
+
+        assertThat(commentMapper.toComment(checkComment), equalTo(comment));
     }
 
     @Test
