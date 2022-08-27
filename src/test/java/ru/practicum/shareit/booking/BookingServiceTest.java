@@ -60,7 +60,7 @@ public class BookingServiceTest {
         booking = new Booking();
         booking.setBooker(user2);
         booking.setItem(item);
-        booking.setStartDate(LocalDateTime.now().plusSeconds(1).withNano(0));
+        booking.setStartDate(LocalDateTime.now().plusSeconds(2).withNano(0));
         booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
         booking.setId(1L);
         booking.setStatus(Status.WAITING);
@@ -167,7 +167,7 @@ public class BookingServiceTest {
         Booking booking2 = new Booking();
         booking2.setBooker(user2);
         booking2.setItem(item);
-        booking2.setStartDate(LocalDateTime.now().plusSeconds(1).withNano(0));
+        booking2.setStartDate(LocalDateTime.now().plusSeconds(2).withNano(0));
         booking2.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
         booking2.setId(2L);
         booking2.setStatus(Status.REJECTED);

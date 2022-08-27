@@ -184,7 +184,7 @@ public class ItemControllerTest {
         Booking booking = new Booking();
         booking.setBooker(user2);
         booking.setItem(item);
-        booking.setStartDate(LocalDateTime.now().withNano(0));
+        booking.setStartDate(LocalDateTime.now().plusSeconds(1).withNano(0));
         booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
         bookingService.createBooking(user2.getId(), booking);
         Comment comment = new Comment();
