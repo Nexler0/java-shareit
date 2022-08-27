@@ -84,7 +84,7 @@ public class BookingRepositoryTest {
     @Test
     void getAllBookingBeforeStartDateTest() {
         assertThat(bookingRepository.getAllBookingBeforeStartDate(LocalDateTime.now().withNano(0),
-                PageRequest.of(0, 10)).toList(), equalTo(List.of(booking)));
+                PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class BookingRepositoryTest {
     @Test
     void getBookingsByItemUserIdBeforeStartDateTest() {
         assertThat(bookingRepository.getBookingsByItemUserIdBeforeStartDate(1L, LocalDateTime.now().withNano(0),
-                PageRequest.of(0, 10)).toList(), equalTo(List.of(booking)));
+                PageRequest.of(0, 10)).toList(), equalTo(List.of()));
     }
 
     @Test
