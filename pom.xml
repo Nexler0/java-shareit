@@ -176,14 +176,6 @@
                                 <rules>
                                     <rule>
                                         <element>BUNDLE</element>
-                                        <excludes>
-                                            <exclude>ru/practicum/shareit/**/*ItemMapper.class</exclude>
-                                            <exclude>ru/practicum/shareit/**/*CommentMapper.class</exclude>
-                                            <exclude>ru/practicum/shareit/**/*CommentShort.class</exclude>
-                                            <exclude>ru/practicum/shareit/**/*BookingMapper.class</exclude>
-                                            <exclude>ru/practicum/shareit/**/*ItemRequestMapper.class</exclude>
-                                            <exclude>ru/practicum/shareit/**/*UserMapper.class</exclude>
-                                        </excludes>
                                         <limits>
                                             <limit>
                                                 <counter>INSTRUCTION</counter>
@@ -193,7 +185,7 @@
                                             <limit>
                                                 <counter>LINE</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.9</minimum>
+                                                <minimum>0.8</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>BRANCH</counter>
@@ -203,7 +195,7 @@
                                             <limit>
                                                 <counter>COMPLEXITY</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.6</minimum>
+                                                <minimum>0.5</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>METHOD</counter>
