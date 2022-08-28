@@ -176,6 +176,14 @@
                                 <rules>
                                     <rule>
                                         <element>BUNDLE</element>
+                                        <excludes>
+                                            <exclude>ru/practicum/shareit/**/*ItemMapper.class</exclude>
+                                            <exclude>ru/practicum/shareit/**/*CommentMapper.class</exclude>
+                                            <exclude>ru/practicum/shareit/**/*CommentShort.class</exclude>
+                                            <exclude>ru/practicum/shareit/**/*BookingMapper.class</exclude>
+                                            <exclude>ru/practicum/shareit/**/*ItemRequestMapper.class</exclude>
+                                            <exclude>ru/practicum/shareit/**/*UserMapper.class</exclude>
+                                        </excludes>
                                         <limits>
                                             <limit>
                                                 <counter>INSTRUCTION</counter>
