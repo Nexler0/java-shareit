@@ -9,9 +9,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.comment.CommentService;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.exception.AccessException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.ItemDtoIn;
+import ru.practicum.shareit.item.dto.ItemDtoOut;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.model.User;
@@ -19,7 +25,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,6 +43,8 @@ public class ItemServiceTest {
     private final UserService userService;
     private final ItemService itemService;
     private final BookingService bookingService;
+    private final ItemMapper itemMapper;
+    private final CommentService commentService;
 
     private User user;
     private User user2;
@@ -166,5 +173,43 @@ public class ItemServiceTest {
         item.setDescription("Cool description");
         item.setLastBooking(BookingMapper.toBookingShort(booking));
         assertThat(itemService.updateItem(user.getId(), item.getId(), item), equalTo(item));
+    }
+
+    @Test
+    void itemMapperTest() {
+        itemService.addNewItem(user.getId(), item);
+        Booking booking = new Booking();
+        booking.setBooker(user2);
+        booking.setItem(item);
+        booking.setStartDate(LocalDateTime.now().withNano(0));
+        booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
+        bookingService.createBooking(user2.getId(), booking);
+        bookingService.setApproveStatusToBooking(user.getId(), booking.getId(), true);
+        item.setLastBooking(BookingMapper.toBookingShort(booking));
+        Comment comment = new Comment();
+        comment.setItem(item);
+        comment.setText("Nice staff");
+        comment.setAuthor(user2);
+        commentService.addComment(user2.getId(), item.getId(), comment);
+        item.setComments(List.of(CommentMapper.toCommentShort(comment)));
+        ItemDtoOut itemDtoOut = ItemDtoOut.builder()
+                .id(item.getId())
+                .userId(item.getUser().getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .comments(item.getComments())
+                .nextBooking(item.getLastBooking())
+                .available(item.getAvailable())
+                .build();
+        assertThat(itemMapper.toDto(item), equalTo(itemDtoOut));
+        item.setComments(null);
+        ItemDtoIn itemDtoIn = new ItemDtoIn();
+        itemDtoIn.setUserId(item.getUser().getId());
+        itemDtoIn.setDescription(item.getDescription());
+        itemDtoIn.setName(item.getName());
+        itemDtoIn.setAvailable(item.getAvailable());
+        itemDtoIn.setLastBookingId(booking.getId());
+        itemDtoIn.setId(item.getId());
+        assertThat(itemMapper.toItem(itemDtoIn), equalTo(item));
     }
 }

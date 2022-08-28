@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @JsonTest
@@ -45,7 +46,7 @@ public class ItemDtoTest {
         item2.setName("Screw");
         item2.setDescription("New screw");
         item2.setUser(new User(1L, "User", "user@mail.ru"));
-        System.out.println(item.equals(item2));
+        assertThat(item, equalTo(item2));
         System.out.println(item.hashCode());
         JsonContent<ItemDtoOut> userJson = this.json.write(itemDtoOut);
 

@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @JsonTest
@@ -29,7 +30,7 @@ public class UserDtoTest {
 
     @Test
     void serializeTest() throws IOException {
-        System.out.println(user.equals(new User(1L, "Harri", "Harri@mail.ru")));
+        assertThat(user, equalTo(new User(1L, "Harri", "Harri@mail.ru")));
         System.out.println(user.hashCode());
         JsonContent<UserDto> userJson = this.json.write(UserMapper.toDto(user));
         assertThat(userJson.getJson(),
