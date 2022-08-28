@@ -168,6 +168,20 @@ public class BookingServiceTest {
     }
 
     @Test
+    void findAllUserBookingWrongStatusTest() {
+        Throwable throwable = assertThrows(ValidationException.class,
+                () -> bookingService.findAllUserBooking(user.getId(), "ALG", 0, 10));
+        assertThat(throwable.getMessage(), is("Unknown state: ALG"));
+    }
+
+    @Test
+    void findAllUserBookingNotExistUserTest() {
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> bookingService.findAllUserBooking(10L, "ALL", 0, 10));
+        assertThat(throwable.getMessage(), is("Пользователь не найден"));
+    }
+
+    @Test
     void findBookingByWrongUserIdTest() {
         bookingService.createBooking(user2.getId(), booking);
         Throwable throwable = assertThrows(NotFoundException.class,

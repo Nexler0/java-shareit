@@ -30,7 +30,6 @@ public class CommentServiceImpl implements CommentService {
         if (itemRepository.existsItemById(itemId) && userRepository.existsUserById(userId)
                 && bookingRepository.existsBookingByBookerId(userId)) {
             List<Booking> bookings = bookingRepository.getBookingsByItemId(itemId);
-            bookings.sort((o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
             Booking booking = bookings.get(0);
             if (booking.getStatus().equals(Status.APPROVED)) {
                 comment.setAuthor(userRepository.getUserById(userId));

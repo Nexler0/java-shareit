@@ -134,6 +134,26 @@ public class ItemServiceTest {
     }
 
     @Test
+    void getItemByUserIdTest() {
+        itemService.addNewItem(user.getId(), item);
+        assertThat(itemService.getItemsByUserId(0L), equalTo(List.of(item)));
+    }
+
+    @Test
+    void getItemByIdTest() {
+        itemService.addNewItem(user.getId(), item);
+        assertThat(itemService.getItemById(0L, item.getId()), equalTo(item));
+    }
+
+    @Test
+    void updateItemFailTest() {
+        itemService.addNewItem(user.getId(), item);
+        Throwable throwable = assertThrows(NotFoundException.class,
+                () -> itemService.updateItem(0L, item.getId(), item));
+        assertThat(throwable.getMessage(), is("Итернал"));
+    }
+
+    @Test
     void updateItemTest() {
         itemService.addNewItem(user.getId(), item);
         Booking booking = new Booking();
