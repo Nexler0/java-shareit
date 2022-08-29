@@ -119,7 +119,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void isValidBooking(Long userId, Booking booking) {
-        LocalDateTime now = LocalDateTime.now().withNano(0);
+        LocalDateTime now = LocalDateTime.now().withNano(0).minusSeconds(2);
 
         if (booking.getStartDate().isBefore(now) || booking.getEndDate().isBefore(now)) {
             throw new ValidationException("Временной диапазон задан неверно");
