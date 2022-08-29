@@ -35,7 +35,8 @@ public class ItemRequestMapper {
                     result.setDescription(itemRequest.getDescription());
                     result.setRequesterId(itemRequest.getRequester().getId());
                     result.setCreated(itemRequest.getCreated());
-            result.setItems(itemRepository.getAllByItemRequestId(itemRequest.getId(), PageRequest.of(0, 100))
+            result.setItems(itemRepository.getAllByItemRequestId(itemRequest.getId(),
+                            PageRequest.of(0, 100))
                     .stream().map(itemMapper::toShort).collect(Collectors.toList()));
             return result;
         } else {

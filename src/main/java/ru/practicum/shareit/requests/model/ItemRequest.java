@@ -1,9 +1,6 @@
 package ru.practicum.shareit.requests.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.user.model.User;
@@ -11,7 +8,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "requests")
@@ -20,9 +16,11 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class ItemRequest {
 
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,18 +35,4 @@ public class ItemRequest {
     private List<ItemShort> items;
 
     private LocalDateTime created;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemRequest that = (ItemRequest) o;
-        return Objects.equals(description, that.description) && Objects.equals(requester, that.requester)
-                && Objects.equals(items, that.items) && Objects.equals(created, that.created);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, requester, items, created);
-    }
 }

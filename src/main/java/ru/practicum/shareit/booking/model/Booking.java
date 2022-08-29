@@ -8,7 +8,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "bookings")
@@ -16,9 +15,11 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Booking {
 
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -42,19 +43,4 @@ public class Booking {
     @Transient
     @JsonIgnore
     private Boolean approved = Status.APPROVED == status;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Booking booking = (Booking) o;
-        return Objects.equals(startDate, booking.startDate) && Objects.equals(endDate, booking.endDate)
-                && Objects.equals(item, booking.item) && Objects.equals(booker, booking.booker)
-                && status == booking.status && Objects.equals(approved, booking.approved);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(startDate, endDate, item, booker, status, approved);
-    }
 }

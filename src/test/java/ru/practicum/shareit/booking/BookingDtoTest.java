@@ -58,7 +58,6 @@ public class BookingDtoTest {
         booking2.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
         booking2.setStatus(Status.APPROVED);
         assertThat(booking, equalTo(booking2));
-        System.out.println(booking.hashCode());
         JsonContent<BookingDtoOut> userJson = this.json.write(bookingDtoOut);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"start\":\"" + LocalDateTime.now().withNano(0) + "\",\"end\":\""

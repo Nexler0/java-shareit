@@ -79,7 +79,7 @@ public class BookingControllerTest {
         bookingDtoIn.setItemId(item.getId());
         bookingDtoIn.setStart(booking.getStartDate());
         bookingDtoIn.setEnd(booking.getEndDate());
-        bookingDtoIn.setStatus(bookingDtoIn.getStatus());
+        bookingDtoIn.setStatus(booking.getStatus());
         bookingDtoIn.setId(booking.getId());
     }
 

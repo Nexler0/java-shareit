@@ -47,11 +47,11 @@ public class ItemDtoTest {
         item2.setDescription("New screw");
         item2.setUser(new User(1L, "User", "user@mail.ru"));
         assertThat(item, equalTo(item2));
-        System.out.println(item.hashCode());
         JsonContent<ItemDtoOut> userJson = this.json.write(itemDtoOut);
 
         assertThat(userJson.getJson(),
-                is("{\"id\":1,\"userId\":1,\"requestId\":null,\"name\":\"screw\",\"description\":\"new screw\"" +
-                        ",\"available\":true,\"lastBooking\":null,\"nextBooking\":null,\"comments\":null}"));
+                is("{\"id\":1,\"userId\":1,\"requestId\":null,\"name\":\"screw\",\"description\":" +
+                        "\"new screw\",\"available\":true,\"lastBooking\":null,\"nextBooking\":null," +
+                        "\"comments\":null}"));
     }
 }

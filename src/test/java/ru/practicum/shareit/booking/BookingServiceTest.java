@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -17,7 +16,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +25,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BookingServiceTest {
@@ -69,7 +66,6 @@ public class BookingServiceTest {
     @Test
     void createBookingTest() {
         bookingService.createBooking(user2.getId(), booking);
-
         TypedQuery<Booking> query = em.createQuery("select i from Booking i where i.id = :id",
                 Booking.class);
         Booking check = query.setParameter("id", booking.getId()).getSingleResult();
@@ -198,7 +194,6 @@ public class BookingServiceTest {
 
     @Test
     void findAllBookingTest() {
-        item.setLastBooking(BookingMapper.toBookingShort(booking));
         itemService.updateItem(user.getId(), item.getId(), item);
         bookingService.createBooking(user2.getId(), booking);
         User user3 = userService.addUser(new User(3L, "Jasmin", "Jasmin@mil.ru"));
@@ -228,7 +223,6 @@ public class BookingServiceTest {
 
     @Test
     void findAllUserBookingTest() {
-        item.setLastBooking(BookingMapper.toBookingShort(booking));
         itemService.updateItem(user.getId(), item.getId(), item);
         bookingService.createBooking(user2.getId(), booking);
         User user3 = userService.addUser(new User(3L, "Jasmin", "Jasmin@mil.ru"));

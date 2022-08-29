@@ -1,9 +1,6 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.shareit.booking.Status;
 
 import java.time.LocalDateTime;
@@ -12,8 +9,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class BookingShort {
 
+    @EqualsAndHashCode.Exclude
     private Long id;
     private Long bookerId;
     private LocalDateTime startDate;

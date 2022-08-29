@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -24,7 +25,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -202,7 +202,6 @@ public class ItemServiceTest {
                 .available(item.getAvailable())
                 .build();
         assertThat(itemMapper.toDto(item), equalTo(itemDtoOut));
-        item.setComments(null);
         ItemDtoIn itemDtoIn = new ItemDtoIn();
         itemDtoIn.setUserId(item.getUser().getId());
         itemDtoIn.setDescription(item.getDescription());

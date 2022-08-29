@@ -18,7 +18,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +26,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CommentServiceTest {
@@ -79,7 +77,6 @@ public class CommentServiceTest {
     void addNewCommentTest() {
         bookingService.setApproveStatusToBooking(user.getId(), booking.getId(), true);
         commentService.addComment(user2.getId(), item.getId(), comment);
-        System.out.println(comment.hashCode());
         TypedQuery<Comment> query = em.createQuery("select i from Comment i where i.id = :id", Comment.class);
         Comment check = query.setParameter("id", comment.getId()).getSingleResult();
         assertThat(check, equalTo(comment));

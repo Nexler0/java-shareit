@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.comment.model.CommentShort;
@@ -13,7 +10,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "items")
@@ -22,9 +18,11 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Item {
 
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -56,21 +54,4 @@ public class Item {
 
     @Transient
     private List<CommentShort> comments;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return Objects.equals(id, item.id)
-                && Objects.equals(getUser().getId(), item.getUser().getId())
-                && available == item.available
-                && name.equals(item.name)
-                && description.equals(item.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user, name, description, available, itemRequest, lastBooking, nextBooking, comments);
-    }
 }

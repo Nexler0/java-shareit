@@ -1,16 +1,12 @@
 package ru.practicum.shareit.comment.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
@@ -19,9 +15,12 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @Validated
+@EqualsAndHashCode
 public class Comment {
 
+
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,18 +35,4 @@ public class Comment {
     @OneToOne
     @JoinColumn(name = "author_id")
     private User author;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(text, comment.text) && Objects.equals(item, comment.item)
-                && Objects.equals(author, comment.author);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(text, item, author);
-    }
 }

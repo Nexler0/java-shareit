@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemService;
@@ -17,7 +18,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;

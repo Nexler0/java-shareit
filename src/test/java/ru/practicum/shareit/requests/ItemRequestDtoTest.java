@@ -46,7 +46,6 @@ public class ItemRequestDtoTest {
         itemRequest2.setDescription("Need something");
         itemRequest2.setCreated(LocalDateTime.now().withNano(0));
         assertThat(itemRequest1, equalTo(itemRequest2));
-        System.out.println(itemRequest1.hashCode());
         JsonContent<ItemRequestDto> userJson = this.json.write(itemRequest);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"description\":\"Need something\",\"requesterId\":1," +
