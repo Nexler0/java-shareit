@@ -88,7 +88,7 @@ class ItemServiceImpl implements ItemService {
                 return item;
             }
         } else {
-            throw new NotFoundException("Item not found");
+            throw new NotFoundException("Предмет не найден");
         }
     }
 
@@ -130,6 +130,6 @@ class ItemServiceImpl implements ItemService {
                 return oldItem;
             }
         }
-        throw new NotFoundException("Итернал");
+        throw new NotFoundException("Ошибка входных параметров");
     }
 }

@@ -48,7 +48,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequest> getAllRequests(Long userId, Integer from, Integer size) {
         if (from < 0 || size <= 0) {
-            throw new ValidationException("Параметр from или size задан неверно");
+            throw new ValidationException("Параметр from или size заданы неверно");
         }
         Page<ItemRequest> result = itemRequestRepository.findAll(PageRequest.of(from, size));
         if (result.isEmpty()) {

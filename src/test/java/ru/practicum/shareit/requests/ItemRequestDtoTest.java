@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @JsonTest
@@ -40,15 +39,9 @@ public class ItemRequestDtoTest {
         itemRequest1.setRequester(new User(1L, "User", "User@mail.ru"));
         itemRequest1.setDescription("Need something");
         itemRequest1.setCreated(LocalDateTime.now().withNano(0));
-        ItemRequest itemRequest2 = new ItemRequest();
-        itemRequest2.setId(1L);
-        itemRequest2.setRequester(new User(1L, "User", "User@mail.ru"));
-        itemRequest2.setDescription("Need something");
-        itemRequest2.setCreated(LocalDateTime.now().withNano(0));
-        assertThat(itemRequest1, equalTo(itemRequest2));
         JsonContent<ItemRequestDto> userJson = this.json.write(itemRequest);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"description\":\"Need something\",\"requesterId\":1," +
-                        "\"created\":\"" + LocalDateTime.now().withNano(0) + "\",\"items\":null}"));
+                        "\"created\":\"" + itemRequest1.getCreated() + "\",\"items\":null}"));
     }
 }

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @JsonTest
@@ -51,13 +50,6 @@ public class BookingDtoTest {
         booking.setStartDate(LocalDateTime.now().withNano(0));
         booking.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
         booking.setStatus(Status.APPROVED);
-        Booking booking2 = new Booking();
-        booking2.setId(1L);
-        booking2.setBooker(new User(1L, "user", "user@mail.ru"));
-        booking2.setStartDate(LocalDateTime.now().withNano(0));
-        booking2.setEndDate(LocalDateTime.now().plusDays(1).withNano(0));
-        booking2.setStatus(Status.APPROVED);
-        assertThat(booking, equalTo(booking2));
         JsonContent<BookingDtoOut> userJson = this.json.write(bookingDtoOut);
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"start\":\"" + LocalDateTime.now().withNano(0) + "\",\"end\":\""

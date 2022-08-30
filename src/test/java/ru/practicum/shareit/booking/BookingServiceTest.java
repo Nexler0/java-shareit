@@ -182,7 +182,7 @@ public class BookingServiceTest {
         bookingService.createBooking(user2.getId(), booking);
         Throwable throwable = assertThrows(NotFoundException.class,
                 () -> bookingService.findBookingById(10L, booking.getId()));
-        assertThat(throwable.getMessage(), is("Владельцем бронирования пользователь не является"));
+        assertThat(throwable.getMessage(), is("Пользователь не является владельцем бронирования"));
     }
 
     @Test

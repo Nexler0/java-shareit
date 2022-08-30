@@ -18,7 +18,6 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode
 public class Comment {
 
-
     @Id
     @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)

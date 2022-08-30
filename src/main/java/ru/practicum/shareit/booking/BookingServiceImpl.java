@@ -111,7 +111,7 @@ public class BookingServiceImpl implements BookingService {
                     || booking.getItem().getUser().getId().equals(userId)) {
                 return booking;
             } else {
-                throw new NotFoundException("Владельцем бронирования пользователь не является");
+                throw new NotFoundException("Пользователь не является владельцем бронирования");
             }
         } else {
             throw new NotFoundException("Бронирование не создано");

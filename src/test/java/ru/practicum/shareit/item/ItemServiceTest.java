@@ -104,7 +104,7 @@ public class ItemServiceTest {
         itemService.deleteItem(user.getId(), item.getId());
         Throwable throwable = assertThrows(NotFoundException.class,
                 () -> itemService.getItemById(1L, item.getId()));
-        assertThat(throwable.getMessage(), is("Item not found"));
+        assertThat(throwable.getMessage(), is("Предмет не найден"));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class ItemServiceTest {
         itemService.addNewItem(user.getId(), item);
         Throwable throwable = assertThrows(NotFoundException.class,
                 () -> itemService.updateItem(0L, item.getId(), item));
-        assertThat(throwable.getMessage(), is("Итернал"));
+        assertThat(throwable.getMessage(), is("Ошибка входных параметров"));
     }
 
     @Test

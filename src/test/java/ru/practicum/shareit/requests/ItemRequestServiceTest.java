@@ -145,7 +145,7 @@ public class ItemRequestServiceTest {
         User user = userService.addUser(new User(1L, "Fran", "Fran@mail.ru"));
         Throwable throwable = assertThrows(ValidationException.class,
                 () -> itemRequestService.getAllRequests(user.getId(), -1, -1));
-        assertThat(throwable.getMessage(), is("Параметр from или size задан неверно"));
+        assertThat(throwable.getMessage(), is("Параметр from или size заданы неверно"));
     }
 
     @Test

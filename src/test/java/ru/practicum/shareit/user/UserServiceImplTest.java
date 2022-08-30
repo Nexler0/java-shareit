@@ -42,7 +42,7 @@ public class UserServiceImplTest {
         UserMapper.toDto(user);
         TypedQuery<User> query = em.createQuery("Select u from User u where u.id = :id", User.class);
         User checkUser = query.setParameter("id", user1.getId()).getSingleResult();
-        assertThat(checkUser.getId(), equalTo(user.getId()));
+        assertThat(checkUser, equalTo(user));
     }
 
     @Test

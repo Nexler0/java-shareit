@@ -7,13 +7,12 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
 
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @JsonTest
@@ -30,7 +29,6 @@ public class UserDtoTest {
 
     @Test
     void serializeTest() throws IOException {
-        assertThat(user, equalTo(new User(1L, "Harri", "Harri@mail.ru")));
         JsonContent<UserDto> userJson = this.json.write(UserMapper.toDto(user));
         assertThat(userJson.getJson(),
                 is("{\"id\":1,\"name\":\"Harri\",\"email\":\"Harri@mail.ru\"}"));

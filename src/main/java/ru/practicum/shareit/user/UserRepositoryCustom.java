@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user;
 
-//TODO рализация в будушем спринте
+//TODO реализация в будущем спринте
 
 public interface UserRepositoryCustom {
 }

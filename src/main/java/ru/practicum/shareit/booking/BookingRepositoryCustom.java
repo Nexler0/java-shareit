@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking;
 
-//TODO рализация в будушем спринте
+//TODO реализация в будущем спринте
 
 public interface BookingRepositoryCustom {
 }
