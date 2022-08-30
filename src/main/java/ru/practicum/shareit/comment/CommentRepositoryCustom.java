@@ -1,6 +1,6 @@
 package ru.practicum.shareit.comment;
 
-//TODO рализация в будушем спринте
+//TODO реализация в будущем спринте
 
 public interface CommentRepositoryCustom {
 }

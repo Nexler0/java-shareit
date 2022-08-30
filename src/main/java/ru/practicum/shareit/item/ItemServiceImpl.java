@@ -34,7 +34,7 @@ class ItemServiceImpl implements ItemService {
                 && item.getDescription() != null && !item.getDescription().isEmpty()) {
             return itemRepository.save(item);
         } else if (!userRepository.existsUserById(userId)) {
-            throw new NotFoundException("пользователь не найден");
+            throw new NotFoundException("Пользователь не найден");
         } else if (item.getAvailable() == null
                 || item.getName() == null || item.getName().isEmpty()
                 || item.getDescription() == null || item.getDescription().isEmpty()) {
@@ -88,7 +88,7 @@ class ItemServiceImpl implements ItemService {
                 return item;
             }
         } else {
-            throw new NotFoundException("Item not found");
+            throw new NotFoundException("Предмет не найден");
         }
     }
 
@@ -130,6 +130,6 @@ class ItemServiceImpl implements ItemService {
                 return oldItem;
             }
         }
-        throw new NotFoundException("Итернал");
+        throw new NotFoundException("Ошибка входных параметров");
     }
 }

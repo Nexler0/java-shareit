@@ -9,6 +9,8 @@ import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemShort;
+import ru.practicum.shareit.requests.ItemRequestRepository;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
@@ -20,16 +22,19 @@ public class ItemMapper {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     public ItemDtoOut toDto(Item item) {
         ItemDtoOut result = ItemDtoOut.builder()
                 .id(item.getId())
                 .userId(item.getUser().getId())
-                .requestId(null)
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .build();
+        if (item.getItemRequest() != null) {
+            result.setRequestId(item.getItemRequest().getId());
+        }
         if (item.getLastBooking() != null) {
             if (item.getLastBooking().getStatus().equals(Status.CANCELED)
                     || item.getLastBooking().getStatus().equals(Status.REJECTED)) {
@@ -57,6 +62,9 @@ public class ItemMapper {
         item.setName(itemDtoIn.getName());
         item.setDescription(itemDtoIn.getDescription());
         item.setAvailable(itemDtoIn.getAvailable());
+        if (itemDtoIn.getRequestId() != null) {
+            item.setItemRequest(itemRequestRepository.getReferenceById(itemDtoIn.getRequestId()));
+        }
         if (!userRepository.existsUserById(itemDtoIn.getUserId())) {
             throw new NotFoundException("Пользователь не найден");
         }
@@ -73,5 +81,18 @@ public class ItemMapper {
             item.setComments(CommentMapper.toCommentShort(commentRepository.getAllByItemId(item.getId())));
         }
         return item;
+    }
+
+    public ItemShort toShort(Item item) {
+        ItemShort result = new ItemShort();
+        result.setId(item.getId());
+        result.setName(item.getName());
+        result.setDescription(item.getDescription());
+        result.setOwnerId(item.getUser().getId());
+        result.setAvailable(item.getAvailable());
+        if (item.getItemRequest() != null) {
+            result.setRequestId(item.getItemRequest().getId());
+        }
+        return result;
     }
 }

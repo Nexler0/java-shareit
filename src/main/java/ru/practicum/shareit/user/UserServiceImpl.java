@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
         if (user != null && isValidateCreateUser(user)) {
             return userRepository.save(user);
         }
-        throw new EmptyListException("Сервера");
+        throw new EmptyListException("Ошибка сервера");
     }
 
     private boolean isValidateCreateUser(User user) {
@@ -95,6 +95,6 @@ public class UserServiceImpl implements UserService {
             user.setName(oldUser.getName());
         }
         userRepository.setUserInfoById(user.getName(), user.getEmail(), userId);
-        return oldUser;
+        return userRepository.getUserById(userId);
     }
 }

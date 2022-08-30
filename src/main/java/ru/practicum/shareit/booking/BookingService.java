@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface BookingService {
 
-    List<Booking> findAllBooking(Long userId, String status);
+    List<Booking> findAllBooking(Long userId, String status, Integer from, Integer size);
 
-    List<Booking> findAllUserBooking(Long userId, String status);
+    List<Booking> findAllUserBooking(Long userId, String status, Integer from, Integer size);
 
     Booking findBookingById(Long userId, Long bookingId);
 
@@ -16,4 +16,5 @@ public interface BookingService {
 
     Booking setApproveStatusToBooking(Long userId, Long bookingId, Boolean approve);
 
+    List<Booking> findBookings();
 }

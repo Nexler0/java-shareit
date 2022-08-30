@@ -13,10 +13,13 @@ import java.time.LocalDateTime;
 @Table(name = "bookings")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Booking {
 
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -1,9 +1,6 @@
 package ru.practicum.shareit.comment.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -18,11 +15,13 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @NoArgsConstructor
 @Validated
+@EqualsAndHashCode
 public class Comment {
 
     @Id
+    @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @NotEmpty
     @Column(name = "text")

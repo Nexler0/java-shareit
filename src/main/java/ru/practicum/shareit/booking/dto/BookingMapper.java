@@ -51,15 +51,4 @@ public class BookingMapper {
         bookingShort.setStatus(booking.getStatus());
         return bookingShort;
     }
-
-    public Booking toBookingFromShort(BookingShort bookingShort) {
-        Booking booking = new Booking();
-        booking.setId(bookingShort.getId());
-        booking.setBooker(userRepository.getUserById(bookingShort.getBookerId()));
-        booking.setItem(itemRepository.getItemById(bookingShort.getItemId()));
-        booking.setStartDate(bookingShort.getStartDate());
-        booking.setEndDate(bookingShort.getEndDate());
-        booking.setStatus(bookingShort.getStatus());
-        return booking;
-    }
 }

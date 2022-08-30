@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item;
 
-//TODO рализация в будушем спринте,
+//TODO реализация в будущем спринте
 
 public interface ItemRepositoryCustom {
 }
