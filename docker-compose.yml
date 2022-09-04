@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   gateway:
-    build:
+    build: "ShareIt-server"
     image:
     container_name:
     ports:

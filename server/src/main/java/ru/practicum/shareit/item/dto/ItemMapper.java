@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
@@ -8,6 +9,7 @@ import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemShort;
 import ru.practicum.shareit.request.ItemRequestRepository;
@@ -17,12 +19,14 @@ import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ItemMapper {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final ItemRequestRepository itemRequestRepository;
+    private final ItemRepository itemRepository;
 
     public ItemDtoOut toDto(Item item) {
         ItemDtoOut result = ItemDtoOut.builder()
@@ -57,15 +61,26 @@ public class ItemMapper {
 
     public Item toItem(ItemDtoIn itemDtoIn) {
         Item item = new Item();
-
-        item.setId(itemDtoIn.getId());
-        item.setName(itemDtoIn.getName());
-        item.setDescription(itemDtoIn.getDescription());
-        item.setAvailable(itemDtoIn.getAvailable());
+        if (itemRepository.existsItemById(itemDtoIn.getId())) {
+            item = itemRepository.getItemById(itemDtoIn.getId());
+            if (!item.getUser().getId().equals(itemDtoIn.getUserId())) {
+                throw new NotFoundException("Пользователь не является владелецем предмета");
+            }
+        }
+        if (itemDtoIn.getName() != null) {
+            item.setName(itemDtoIn.getName());
+        }
+        if (itemDtoIn.getDescription() != null) {
+            item.setDescription(itemDtoIn.getDescription());
+        }
+        if (itemDtoIn.getAvailable() != null) {
+            item.setAvailable(itemDtoIn.getAvailable());
+        }
         if (itemDtoIn.getRequestId() != null) {
             item.setItemRequest(itemRequestRepository.getReferenceById(itemDtoIn.getRequestId()));
         }
-        if (!userRepository.existsUserById(itemDtoIn.getUserId())) {
+        if (!userRepository.existsUserById(itemDtoIn.getUserId())
+                && !item.getUser().getId().equals(itemDtoIn.getUserId())) {
             throw new NotFoundException("Пользователь не найден");
         }
         item.setUser(userRepository.getUserById(itemDtoIn.getUserId()));

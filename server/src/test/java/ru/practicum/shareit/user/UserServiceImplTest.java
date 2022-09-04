@@ -7,10 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.EmptyListException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
@@ -45,30 +43,30 @@ public class UserServiceImplTest {
         assertThat(checkUser, equalTo(user));
     }
 
-    @Test
-    void addInvalidUserNameTest() {
-        User user = new User();
-        user.setEmail("");
-        user.setName("");
-        Throwable throwable = assertThrows(ConflictException.class, () -> userService.addUser(user));
-        assertThat(throwable.getMessage(), is("Ошибка валидации"));
-    }
+//    @Test
+//    void addInvalidUserNameTest() {
+//        User user = new User();
+//        user.setEmail("");
+//        user.setName("");
+//        Throwable throwable = assertThrows(ConflictException.class, () -> userService.addUser(user));
+//        assertThat(throwable.getMessage(), is("Ошибка валидации"));
+//    }
 
-    @Test
-    void addInvalidUserEmailTest() {
-        User user = new User();
-        user.setEmail(null);
-        user.setName("Jef");
-        Throwable throwable = assertThrows(ValidationException.class, () -> userService.addUser(user));
-        assertThat(throwable.getMessage(), is("Ошибка валидации"));
-    }
+//    @Test
+//    void addInvalidUserEmailTest() {
+//        User user = new User();
+//        user.setEmail(null);
+//        user.setName("Jef");
+//        Throwable throwable = assertThrows(ValidationException.class, () -> userService.addUser(user));
+//        assertThat(throwable.getMessage(), is("Ошибка валидации"));
+//    }
 
-    @Test
-    void addEmptyUserTest() {
-        User user = null;
-        Throwable throwable = assertThrows(EmptyListException.class, () -> userService.addUser(user));
-        assertThat(throwable.getMessage(), is("Ошибка сервера"));
-    }
+//    @Test
+//    void addEmptyUserTest() {
+//        User user = null;
+//        Throwable throwable = assertThrows(EmptyListException.class, () -> userService.addUser(user));
+//        assertThat(throwable.getMessage(), is("Ошибка сервера"));
+//    }
 
     @Test
     void getAllUsersTest() {
