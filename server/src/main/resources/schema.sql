@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS comments CASCADE;
 DROP TYPE IF EXISTS status_enum CASCADE;
 
 CREATE TYPE status_enum AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELED');
+-- CREATE CAST (CHARACTER VARYING as status_enum) WITH INOUT AS IMPLICIT;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS bookings
     end_time   TIMESTAMP WITHOUT TIME ZONE,
     item_id    BIGINT NOT NULL,
     booker_id  BIGINT NOT NULL,
-    status     status_enum default 'WAITING',
+    status     VARCHAR default 'WAITING',
     CONSTRAINT FK_itemId FOREIGN KEY (item_id) REFERENCES items (id),
     CONSTRAINT FK_bookerId FOREIGN KEY (booker_id) REFERENCES users (id)
 );
