@@ -45,6 +45,10 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> postCommentToItem(Long userId, Long itemId, CommentShort commentShort) {
+        if (commentShort.getText() == null || commentShort.getText().equals("")
+                || commentShort.getText().length() == 0) {
+            throw new ValidationException("Ошибка валидации");
+        }
         return post("/" + itemId + "/comment", userId, commentShort);
     }
 

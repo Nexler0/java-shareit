@@ -8,9 +8,10 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
-import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.exception.ValidationException;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -46,6 +47,12 @@ public class BookingClient extends BaseClient {
     }
 
     public ResponseEntity<Object> addBooking(long userId, BookingDtoIn bookingDtoIn) {
+        LocalDateTime now = LocalDateTime.now().withNano(0).minusSeconds(2);
+
+        if (bookingDtoIn.getItemId() == null || bookingDtoIn.getStart().isBefore(now)
+                || bookingDtoIn.getEnd().isBefore(now)) {
+            throw new ValidationException("Ошибка Валидации");
+        }
         return post("", userId, bookingDtoIn);
     }
 

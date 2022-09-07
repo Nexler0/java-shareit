@@ -43,30 +43,7 @@ public class UserServiceImplTest {
         assertThat(checkUser, equalTo(user));
     }
 
-//    @Test
-//    void addInvalidUserNameTest() {
-//        User user = new User();
-//        user.setEmail("");
-//        user.setName("");
-//        Throwable throwable = assertThrows(ConflictException.class, () -> userService.addUser(user));
-//        assertThat(throwable.getMessage(), is("Ошибка валидации"));
-//    }
 
-//    @Test
-//    void addInvalidUserEmailTest() {
-//        User user = new User();
-//        user.setEmail(null);
-//        user.setName("Jef");
-//        Throwable throwable = assertThrows(ValidationException.class, () -> userService.addUser(user));
-//        assertThat(throwable.getMessage(), is("Ошибка валидации"));
-//    }
-
-//    @Test
-//    void addEmptyUserTest() {
-//        User user = null;
-//        Throwable throwable = assertThrows(EmptyListException.class, () -> userService.addUser(user));
-//        assertThat(throwable.getMessage(), is("Ошибка сервера"));
-//    }
 
     @Test
     void getAllUsersTest() {
