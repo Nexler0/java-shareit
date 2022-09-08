@@ -33,7 +33,7 @@ public class ItemRequestClient extends BaseClient {
                 || itemRequestDto.getDescription().isBlank()) {
             throw new ValidationException("Ошибка валидации");
         }
-        return post("", userId,itemRequestDto);
+        return post("", userId, itemRequestDto);
     }
 
     public ResponseEntity<Object> getAllRequests(Long userId, Integer from, Integer size) {

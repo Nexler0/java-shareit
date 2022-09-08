@@ -64,7 +64,7 @@ public class ItemMapper {
         if (itemRepository.existsItemById(itemDtoIn.getId())) {
             item = itemRepository.getItemById(itemDtoIn.getId());
             if (!item.getUser().getId().equals(itemDtoIn.getUserId())) {
-                throw new NotFoundException("Пользователь не является владелецем предмета");
+                throw new NotFoundException("Пользователь не является владельцем предмета");
             }
         }
         if (itemDtoIn.getName() != null) {

@@ -60,17 +60,15 @@ public class ItemClient extends BaseClient {
         return get("/search?text=" + text, userId);
     }
 
-    private boolean isValidateItem(ItemDtoIn itemDtoIn) {
-        if (itemDtoIn.getAvailable() != null
-                && itemDtoIn.getName() != null && !itemDtoIn.getName().isEmpty()
-                && itemDtoIn.getDescription() != null && !itemDtoIn.getDescription().isEmpty()) {
-            return true;
+    private void isValidateItem(ItemDtoIn itemDtoIn) {
+        if (itemDtoIn.getAvailable() == null
+                && itemDtoIn.getName() == null && !itemDtoIn.getName().isEmpty()
+                && itemDtoIn.getDescription() == null && itemDtoIn.getDescription().isEmpty()) {
+            throw new ValidationException("Ошибка валидации Item");
         } else if (itemDtoIn.getAvailable() == null
                 || itemDtoIn.getName() == null || itemDtoIn.getName().isEmpty()
                 || itemDtoIn.getDescription() == null || itemDtoIn.getDescription().isEmpty()) {
             throw new ValidationException("Входные условия item");
-        } else {
-            throw new ValidationException("Ошибка валидации Item");
         }
     }
 }

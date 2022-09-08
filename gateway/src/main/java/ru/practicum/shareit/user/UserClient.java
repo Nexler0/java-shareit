@@ -47,14 +47,13 @@ public class UserClient extends BaseClient {
         return patch("/" + id, userDto);
     }
 
-    private boolean isValidateCreateUser(UserDto userDto) {
-        if (userDto.getEmail() != null && !userDto.getName().isEmpty() &&
-                userDto.getEmail() != null && !userDto.getEmail().isEmpty()) {
-            return true;
+    private void isValidateCreateUser(UserDto userDto) {
+        if (userDto.getEmail() == null && userDto.getName().isEmpty() &&
+                userDto.getEmail() == null && userDto.getEmail().isEmpty()) {
+            throw new ConflictException("Ошибка валидации");
         }
         if (userDto.getEmail() == null) {
             throw new ValidationException("Ошибка валидации");
         }
-        throw new ConflictException("Ошибка валидации");
     }
 }
